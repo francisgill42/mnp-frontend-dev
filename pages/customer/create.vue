@@ -25,20 +25,30 @@ Close
 
 <v-row>
 <v-col>
-<v-text-field :rules="Rules" v-model="name" label="Name"></v-text-field>
+<v-text-field :rules="Rules" v-model="contact_person_name" label="Contact Person Name"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field :rules="Rules" type="password" v-model="password" label="Password"></v-text-field>
-<span v-if="errors.password" class="error--text">{{errors.password[0]}}</span>
+<v-text-field :rules="Rules" v-model="trade_name" label="Trade Name"></v-text-field>
 </v-col>
+<v-col>
+<v-text-field :rules="Rules" v-model="company_name" label="Company Name"></v-text-field>
+</v-col>
+</v-row>
+<v-row>
 <v-col>
 <v-text-field :rules="Rules"  v-model="email" label="Email"></v-text-field>
 <span v-if="errors.email" class="error--text">{{errors.email[0]}}</span>
 </v-col> 
+
+    <v-col>
+<v-text-field :rules="Rules" type="password" v-model="password" label="Password"></v-text-field>
+<span v-if="errors.password" class="error--text">{{errors.password[0]}}</span>
+</v-col>
+
 </v-row>
 <v-row>
 <v-col>
-<v-text-field :rules="Rules" v-model="ntn" label="National Tax Number"></v-text-field>
+<v-text-field :rules="Rules" v-model="ntn" label="VAT Number"></v-text-field>
 </v-col>
 <v-col>
 <v-select
@@ -64,7 +74,7 @@ label="Group"
 <v-text-field :rules="Rules" v-model="address" label="Address"></v-text-field>
 </v-col>
 </v-row>
-<v-row>
+<v-row> 
 <v-col>
 <v-select
 :rules="Rules"
@@ -88,7 +98,79 @@ label="City"
 
 </v-col>
 </v-row>
+<v-row>
+<v-col>
+<v-select
+:rules="Rules"
+v-model="payment_type" 
+:items="[{payment_type:'cash'},{payment_type:'credit'}]"
+item-value="payment_type"
+item-text="payment_type" 
+label="Payment Type"
+></v-select>
 
+</v-col>
+</v-row>
+<v-row>
+     <v-col>
+      <v-menu
+        ref="delivery_from"
+        v-model="delivery_from_menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="delivery_from_time"
+        transition="scale-transition"
+        offset-y
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="delivery_from_time"
+            label="Delivery From"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-time-picker
+          v-if="delivery_from_menu"
+          v-model="delivery_from_time"
+          full-width
+          :max="delivery_to_time"
+          @click:minute="$refs.delivery_from.save(delivery_from_time)"
+        ></v-time-picker>
+      </v-menu>
+    </v-col>
+ <v-col>
+      <v-menu
+        ref="delivery_to"
+        v-model="delivery_to_menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="delivery_to_time"
+        transition="scale-transition"
+        offset-y
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="delivery_to_time"
+            label="Delivery To"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-time-picker
+          v-if="delivery_to_menu"
+          v-model="delivery_to_time"
+          full-width
+          :min="delivery_from_time"
+          @click:minute="$refs.delivery_to.save(delivery_to_time)"
+        ></v-time-picker>
+      </v-menu>
+    </v-col>      
+</v-row>
 <v-row>
 <v-col>
 <v-checkbox
@@ -155,12 +237,21 @@ this.states = states.data;
 },
 data:() => ({
 
+delivery_from_menu: false,
+delivery_to_menu: false,
+
+delivery_from_time:null,
+delivery_to_time:null,
+
 IsActive:'',
 customer_categories:[],
 states:[],
 cities:[],
 
-name : "",
+contact_person_name : "",
+trade_name : "",
+company_name : "",
+payment_type:"",
 email : "",
 password :"",
 ntn : "",
@@ -188,8 +279,10 @@ get_cities_by_id(){
 this.$axios.get('state/'+this.state_id).then((res) => this.cities = res.data);
 },
 register(){
-var payload = {
-name : this.name,
+var payload = {  
+contact_person_name : this.contact_person_name,
+trade_name : this.trade_name,
+company_name : this.company_name,
 email : this.email,
 password : this.password,
 ntn : this.ntn,
@@ -199,6 +292,9 @@ mobile_number : this.mobile_number,
 address : this.address,
 state_id : this.state_id,
 city_id : this.city_id,
+payment_type : this.payment_type,
+delivery_from : this.delivery_from_time,
+delivery_to : this.delivery_to_time,
 IsActive:this.IsActive ? 1 : 0 
 };
 

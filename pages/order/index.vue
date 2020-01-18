@@ -120,7 +120,7 @@ flat
     :class="get_stock_info(item.stock).class"
     >
     {{get_stock_info(item.stock).text}}
-    {{item.stock > 0 ? '(' + item.stock + ')' : '' }}    
+    {{item.stock > 0 ? '(' + item.stock + ')' : '' }} 
      
     </span>  
     
@@ -198,15 +198,15 @@ label="Driver"
 <tbody>
 <tr>
 <th style="padding-left:75px; width:60%;">Gross Amount</th>
-<td style="border:none;">AED {{ editedItem.order_gross }}</td>
+<td style="border:none;">AED {{ get_decimal_value(editedItem.order_gross) }}</td>
 </tr>    
 <tr>
 <th style="padding-left:75px; width:60%;">Tax (VAT %5)</th>
-<td style="border:;">AED {{ editedItem.order_tax }}</td>
+<td style="border:;">AED {{ get_decimal_value(editedItem.order_tax) }}</td>
 </tr>
 <tr>
 <th style="padding-left:75px; width:60%;">Grand Total</th>
-<th>AED {{ editedItem.order_total }}</th>
+<th>AED {{get_decimal_value(editedItem.order_total)}}  </th>
 </tr>
 
 
@@ -251,7 +251,7 @@ class="mr-2"
 mdi-eye
 </v-icon>
 <v-icon
-v-if="item.order_status_id == 1"
+v-if="item.order_status_id == 1 || item.order_status_id == 2"
 small
 class="mr-2"
 @click="editItem(item)"
@@ -330,7 +330,6 @@ value: 'order_total',
 text: 'Order Status',
 align: 'left',
 sortable: false,
-
 value: 'status',
 },
 {

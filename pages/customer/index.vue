@@ -48,26 +48,10 @@ vertical
 
 <v-dialog v-model="dialog" max-width="1200px">
 <template v-slot:activator="{ on }">
-<v-btn color="primary" to="customer/create" class="black--text mb-2">New Item</v-btn>
+<v-btn color="primary" to="customer/create" class="black--text mb-2">New Customer</v-btn>
 </template>
 <v-card>
-<!-- <v-card-title>
 
-<span class="headline">{{ formTitle }}</span> -->
-
-<!-- <v-row>
-<v-spacer></v-spacer>
-<v-col cols="4"></v-col>
-<v-col cols="4">
-<v-text-field :readonly="isReadOnly"  v-model="editedItem.pwd" label="Password"></v-text-field>
-</v-col>
-<v-col>
-<v-btn v-if="!isReadOnly" class="primary black--text mt-3" text @click="save">Update Password</v-btn>
-</v-col>
-</v-row> -->
-
-
-<!-- </v-card-title> -->
 <v-card-title>
 <v-icon small :color="editedItem.IsActive ? 'success' : 'error' ">mdi-checkbox-blank-circle</v-icon>
 &nbsp;{{editedItem.IsActive ? 'Active' : 'Inactive'}}
@@ -78,8 +62,17 @@ vertical
 <v-container>
 <v-row>
 <v-col>
-<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.name" label="Name"></v-text-field>
+<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.contact_person_name" label="Contact Person Name"></v-text-field>
 </v-col>
+<v-col>
+<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.trade_name" label="Trade Name"></v-text-field>
+</v-col>
+<v-col>
+<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.company_name" label="Company Name"></v-text-field>
+</v-col>
+</v-row>
+
+<v-row>
 <v-col>
 <v-text-field :readonly="isReadOnly" :rules="Rules"  v-model="editedItem.email" label="Email"></v-text-field>
 </v-col> 
@@ -105,7 +98,7 @@ label="Group"
 <v-text-field :rules="Rules" v-model="editedItem.mobile_number" label="Mobile Number"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.ntn" label="National Tax Number"></v-text-field>
+<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.ntn" label="VAT Number"></v-text-field>
 </v-col>
 </v-row>
 <v-row>
@@ -138,8 +131,84 @@ label="City"
 ></v-select>
 
 <v-text-field v-else :readonly="isReadOnly"  v-model="editedItem.city_name" label="City"></v-text-field>
-
 </v-col>
+</v-row>
+
+<v-row>
+<v-col>
+<v-select
+v-if="!isReadOnly"
+:rules="Rules"
+v-model="editedItem.payment_type" 
+:items="[{payment_type:'cash'},{payment_type:'credit'}]"
+item-value="payment_type"
+item-text="payment_type" 
+label="Payment Type"
+></v-select>
+<v-text-field v-else  :readonly="isReadOnly" :rules="Rules" v-model="editedItem.payment_type" label="Payment Type"></v-text-field>
+</v-col>
+<v-col v-if="isReadOnly">
+<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.delivery_from" label="Delivery From"></v-text-field>
+</v-col>
+<v-col v-if="isReadOnly">
+<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.delivery_to" label="Delivery To"></v-text-field>
+</v-col>
+   <v-col v-if="!isReadOnly">
+      <v-menu
+        ref="delivery_from"
+        v-model="delivery_from_menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="editedItem.delivery_from"
+        transition="scale-transition"
+        offset-y
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+          
+            v-model="editedItem.delivery_from"
+            label="Delivery From"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-time-picker
+          v-if="delivery_from_menu"
+          v-model="editedItem.delivery_from"
+          full-width
+          @click:minute="$refs.delivery_from.save(editedItem.delivery_from)"
+        ></v-time-picker>
+      </v-menu>
+    </v-col>
+ <v-col v-if="!isReadOnly">
+      <v-menu
+        ref="delivery_to"
+        v-model="delivery_to_menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="editedItem.delivery_to"
+        transition="scale-transition"
+        offset-y
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="editedItem.delivery_to"
+            label="Delivery To"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-time-picker
+          v-if="delivery_to_menu"
+          v-model="editedItem.delivery_to"
+          full-width
+          @click:minute="$refs.delivery_to.save(editedItem.delivery_to)"
+        ></v-time-picker>
+      </v-menu>
+    </v-col>   
 </v-row>
 
 <v-row v-if="!isReadOnly">
@@ -215,6 +284,10 @@ export default {
 // },
 data: () => ({
 
+delivery_from_menu: false,
+delivery_to_menu: false,
+
+
 snackbar:false,
 action:'',
 search:'',
@@ -226,9 +299,9 @@ align: 'left',
 value: 'id',
 },
 {
-text: 'Name',
+text: 'Contact Person Name',
 align: 'left',
-value: 'name',
+value: 'contact_person_name',
 },
 {
 text: 'Email',
@@ -270,7 +343,9 @@ editedIndex: -1,
 editedItem: {
 customer_category_name:'',
 customer_category_id:'',
-name: '',
+contact_person_name: '',
+trade_name: '',
+company_name: '',
 email: '',
 password:'',
 ntn:'',
@@ -283,11 +358,16 @@ state_name:'',
 city_id:'',
 city_name:'',
 IsActive:'',
+payment_type:'',
+delivery_from:'',
+delivery_to:'',
 },
 defaultItem: {
 customer_category_name:'',
 customer_category_id:'',
-name: '',
+contact_person_name: '',
+trade_name: '',
+company_name: '',
 email:'',
 password:'', 
 ntn:'',    
@@ -300,6 +380,9 @@ state_name:'',
 city_id:'',
 city_name:'', 
 IsActive:'',
+payment_type:'',
+delivery_from:'',
+delivery_to:'',
 },
 response : {
 msg:''
@@ -410,9 +493,10 @@ this.$axios.post('update_password/' + this.editedItem.id, {pwd:this.editedItem.p
 },
 save () {
 const payload = {
-name:this.editedItem.name,
+contact_person_name: this.editedItem.contact_person_name,
+trade_name: this.editedItem.trade_name,
+company_name: this.editedItem.company_name,
 email:this.editedItem.email,
-// password:this.editedItem.password,
 customer_category_id:this.editedItem.customer_category_id,
 ntn:this.editedItem.ntn,
 phone_number:this.editedItem.phone_number,
@@ -421,12 +505,17 @@ address:this.editedItem.address,
 state_id:this.editedItem.state_id,
 cities_by_state_id:(this.editedItem.cities_by_state_id) ? this.editedItem.cities_by_state_id : this.editedItem.city_id,
 IsActive:this.editedItem.IsActive ? 1 : 0,
+payment_type:this.editedItem.payment_type,
+delivery_from:this.editedItem.delivery_from,
+delivery_to:this.editedItem.delivery_to,
 };
 
+//console.log(payload);
 
 this.$axios.put('customer/' + this.editedItem.id,payload)
 .then(res => {
 if(res.data.response_status){
+  console.log(res.data.updated_record);
 const index = this.customers.findIndex(item => item.id == this.editedItem.id)
 this.customers.splice(index, 1, res.data.updated_record);
 this.snackbar = res.data.response_status;
