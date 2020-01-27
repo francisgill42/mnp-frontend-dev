@@ -48,7 +48,7 @@ vertical
 
 <v-dialog v-model="dialog" max-width="1200px">
 <template v-slot:activator="{ on }">
-<v-btn color="primary" to="maintenance/create" class="black--text mb-2">New Item</v-btn>
+<v-btn color="primary" to="maintenance/create" class="black--text mb-2">Add Maintenance User</v-btn>
 </template>
 <v-card>
 <!-- <v-card-title>

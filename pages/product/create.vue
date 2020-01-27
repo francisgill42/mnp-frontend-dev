@@ -46,7 +46,7 @@ Submit
 <v-row>
 
 <v-col>
-<v-text-field :rules="Rules"  v-model="product_price" label="Product Price"></v-text-field>
+<v-text-field type="number" :rules="Rules"  v-model="product_price" label="Product Price"></v-text-field>
 </v-col>
 <!-- <v-col>
 <v-select

@@ -48,7 +48,7 @@ Close
 </v-row>
 <v-row>
 <v-col>
-<v-text-field :rules="Rules" v-model="ntn" label="VAT Number"></v-text-field>
+<v-text-field type="number" :rules="Rules" v-model="ntn" label="VAT Number"></v-text-field>
 </v-col>
 <v-col>
 <v-select
@@ -63,10 +63,10 @@ label="Group"
 </v-row>
 <v-row>
 <v-col>
-<v-text-field :rules="Rules" v-model="phone_number" label="Phone Number"></v-text-field>
+<v-text-field type="number" :rules="Rules" v-model="phone_number" label="Phone Number"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field :rules="Rules" v-model="mobile_number" label="Mobile Number"></v-text-field>
+<v-text-field type="number" :rules="Rules" v-model="mobile_number" label="Mobile Number"></v-text-field>
 </v-col>
 </v-row>
 <v-row>

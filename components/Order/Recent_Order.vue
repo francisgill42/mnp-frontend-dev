@@ -39,6 +39,38 @@ hide-default-footer
       <!-- <v-btn class="primary mx-2 black--text no_print" @click="print_me"><v-icon>mdi-printer</v-icon>&nbsp; print</v-btn> -->
     <VueJsonToCsv
     :json-data="orders"
+    :labels="{ 
+      id:{ title: 'order id' },
+      order_total:{ title: 'order total' }, 
+      order_tax:{ title: 'order tax' }, 
+      order_gross:{ title: 'order gross' }, 
+      order_confirmed_date:{ title: 'order confirmed date' }, 
+      order_shipped_date:{ title: 'order shipped date' }, 
+      order_delivered_date:{ title: 'order delivered date' },  
+      discounted_price:{ title: 'discounted price' }, 
+      delivery_date:{ title: 'delivery date' },  
+      payment_due_date:{ title: 'payment due date' },  
+      status:{ title: 'status' },  
+      email	:{ title: 'email' },  
+      phone_number:{ title: 'phone number' },  
+      mobile_number:{ title: 'mobile number' },  
+      ntn:{ title: 'ntn' },  
+      address:{ title: 'address' },  
+      company_name:{ title: 'company name' },  
+      trade_name:{ title: 'trade name' },  
+      contact_person_name:{ title: 'contact person name' },  
+      payment_type:{ title: 'payment type' },  
+      delivery_from:{ title: 'delivery from' },
+      delivery_to:{ title: 'delivery to' },
+      customer_category_name:{ title: 'customer category name' },
+      state_name:{ title: 'state name' },
+      city_name:{ title: 'city name' },  
+      }"    
+	
+
+
+	
+
     >
     <v-btn class="primary mx-2 black--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>

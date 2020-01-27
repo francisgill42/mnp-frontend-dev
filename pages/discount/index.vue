@@ -56,7 +56,7 @@
         ></v-divider>
        <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary"  class="mb-2 black--text" v-on="on">New Item</v-btn>
+            <v-btn color="primary"  class="mb-2 black--text" v-on="on">add discount</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -113,13 +113,13 @@
       </v-toolbar>
     </template>
     <template v-slot:item.action="{ item }">
-      <v-icon
+      <!-- <v-icon
         small
         class="mr-2"
         @click="editItem(item)"
       >
         mdi-pencil
-      </v-icon>
+      </v-icon> -->
       <v-icon
         small
         @click="deleteItem(item)"
