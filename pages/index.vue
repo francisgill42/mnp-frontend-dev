@@ -66,7 +66,7 @@ tile class="primary" size="60">
 <v-col cols="5">
 <v-row>
 
-<v-col>
+<!-- <v-col>
 <v-card class="no_print">
 
 <v-list-item>
@@ -83,7 +83,7 @@ tile class="primary" size="60">
 </v-list-item>
 </v-card>
 
-</v-col>
+</v-col> -->
 
 <v-col>
 <v-card class="no_print">
