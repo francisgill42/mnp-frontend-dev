@@ -31,10 +31,6 @@ Close
 <v-text-field :rules="Rules" type="password" v-model="password" label="Password"></v-text-field>
 <span v-if="errors.password" class="error--text">{{errors.password[0]}}</span>
 </v-col>
-<v-col>
-<v-text-field :rules="Rules"  v-model="email" label="Email"></v-text-field>
-<span v-if="errors.email" class="error--text">{{errors.email[0]}}</span>
-</v-col> 
 </v-row>
 <v-row>
 <v-col>
@@ -144,7 +140,6 @@ states:[],
 cities:[],
 
 name : "",
-email : "",
 password :"",
 phone_number : "",
 mobile_number : "",
@@ -154,7 +149,6 @@ city_id : "",
 msg:"",
 errors:[
 {password:''},
-{email:''}
 ],
 
 snackbar:false,
@@ -171,7 +165,6 @@ this.$axios.get('state/'+this.state_id).then((res) => this.cities = res.data);
 register(){
 var payload = {
 name : this.name,
-email : this.email,
 password : this.password,
 phone_number : this.phone_number,
 mobile_number : this.mobile_number,

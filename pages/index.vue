@@ -1,114 +1,281 @@
 <template>
 <div>
-
 <v-row>
-  <v-col>
-        
-    <v-card color="#1F7087">
-      
-    <v-list-item three-line>
-      <v-list-item-content>
-        <div class="overline mb-4 white--text">Orders</div>
-        <v-list-item-title color="pink darken-2" class="white--text headline mb-1">Total </v-list-item-title>
-        <v-list-item-subtitle>
-          </v-list-item-subtitle>
-      </v-list-item-content>
+<v-col>
+<v-card class="no_print">
 
-      <v-list-item-avatar
-        tile
-        size="50"
-        color="#385F73"
-        >
-       <span  class="white--text">{{orders}}</span>
-        </v-list-item-avatar>
-    </v-list-item>
+<v-list-item four-line>
+<v-list-item-content>
+<div class="overline mb-4">Today's Orders</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{daily_orders.orders_count}} </v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon>mdi-package-variant</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
 
+</v-col>
 
-    
-  </v-card>
-  </v-col>
+<v-col>
+<v-card class="no_print">
+<v-list-item four-line>
+<v-list-item-content>
+<div class="overline mb-4">Last Week Orders</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{weekly_orders.orders_count}}</v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
 
-
-  <v-col>
-    <v-card color="#1F7087">
-    <v-list-item three-line>
-      <v-list-item-content>
-        <div class="overline mb-4 white--text">Products</div>
-        <v-list-item-title class="headline mb-1 white--text">Total </v-list-item-title>
-        <v-list-item-subtitle>
-          </v-list-item-subtitle>
-      </v-list-item-content>
-
-      <v-list-item-avatar
-        tile
-        size="50"
-        color="#385F73"
-        >
-       <span class="white--text">{{products}}</span>
-        </v-list-item-avatar>
-    </v-list-item>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon>mdi-package-variant</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+</v-col>
 
 
-    
-  </v-card>
-  </v-col>
+<v-col>
+<v-card class="no_print">
 
-    <v-col>
-      <v-card color="#1F7087">
-    <v-list-item three-line>
-      <v-list-item-content>
-        <div class="overline mb-4 white--text">Customers</div>
-        <v-list-item-title class="headline mb-1 white--text">Total </v-list-item-title>
-        <v-list-item-subtitle>
-          </v-list-item-subtitle>
-      </v-list-item-content>
+<v-list-item four-line>
+<v-list-item-content>
+<div class="overline mb-4">Last Month Orders</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{monthly_orders.orders_count}}</v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
 
-      <v-list-item-avatar
-        tile
-        
-        size="50"
-        color="#385F73"
-        >
-       <span  class="white--text">{{customers}}</span>
-        </v-list-item-avatar>
-    </v-list-item>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon>mdi-package-variant</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+</v-col>
 
-
-    
-  </v-card>
-  </v-col>
 </v-row>
+<v-row>
+<v-col cols="7">
+    <RecentOrder />
+</v-col>
+<v-col cols="5">
+<v-row>
+
+<v-col>
+<v-card class="no_print">
+
+<v-list-item>
+<v-list-item-content>
+<div class="overline mb-4">Total Sales</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{products}} </v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon> mdi-currency-usd </v-icon> </span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+
+</v-col>
+
+<v-col>
+<v-card class="no_print">
+
+<v-list-item>
+<v-list-item-content>
+<div class="overline mb-4">Total Products</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{products}}</v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon>mdi-nutrition</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+
+</v-col>
+
+</v-row>
+<v-row>
+<v-col>
+<v-card class="no_print">
+
+<v-list-item>
+<v-list-item-content>
+<div class="overline mb-4">Total Customers</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{customers}}</v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon>mdi-account</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+
+</v-col>
+
+<v-col>
+<v-card class="no_print">
+
+<v-list-item>
+<v-list-item-content>
+<div class="overline mb-4">Total Orders</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{orders}} </v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon>mdi-package-variant</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+
+</v-col>
 
 
-  </div>
+</v-row>
+<v-row>
+
+<!-- <v-col cols="6">
+<v-card class="no_print">
+
+    <v-toolbar flat class="title">Driver A's order (Today)
+    </v-toolbar>
+<template>
+  <v-data-table
+    :headers="test_headers"
+    :items="order_by_driver"
+    hide-default-footer
+    class="elevation-1"
+  ></v-data-table>
+</template>
+
+</v-card>
+
+</v-col> -->
+
+<!-- <v-col cols="6">
+    <v-card class="no_print">
+
+    <v-toolbar flat class="title">Driver B's order (Today)
+    </v-toolbar>
+    <template>
+    <v-data-table
+    :headers="test_headers"
+    :items="order_by_driver"
+    hide-default-footer
+    class="elevation-1"
+    ></v-data-table>
+    </template>
+
+    </v-card>
+
+</v-col> -->
+
+</v-row>
+<v-row>
+
+
+
+</v-row>
+</v-col>
+</v-row>
+</div>
 </template>
 
 <script>
+
+import RecentOrder from '../components/Order/Recent_Order';
+// import OrderByDriver from '../components/Order/OrderByDriver';
+
 export default{
-  data(){
-    return {
-      orders:'',
-      products:'',
-      customers:'',
-    }
-  },
+components : {
+    RecentOrder,
+    // OrderByDriver
+},
+
+data(){
+return {
+ test_headers: [
+          {
+            text: 'Customer',
+            align: 'left',
+            sortable: false,
+            value: 'company_name',
+          },
+            {
+            text: 'Order Total',
+            align: 'left',
+            sortable: false,
+            value: 'order_total',
+          },
+          
+        ],
+        order_by_driver: [
+          {
+          company_name:'francis',
+           order_total:'78776.00'
+          },
+           {
+          company_name:'francis',
+           order_total:'78776.00'
+          },
+           {
+          company_name:'francis',
+           order_total:'78776.00'
+          },
+           {
+          company_name:'francis',
+           order_total:'78776.00'
+          },
+           {
+          company_name:'francis',
+           order_total:'78776.00'
+          },
+         
+        ],   
+orders:'',
+products:'',
+customers:'',
+daily_orders:'',
+weekly_orders:'',
+monthly_orders:'',
+}
+},
 created () {
-      this.initialize()
-    },
-    methods: {
+this.initialize()
+},
+methods: {
 
-      async initialize () {
+async initialize () {
 
-          const counters = await this.$axios.get('counters');
-          console.log(counters.data.orders);
-          
-          this.orders = counters.data.orders;
-          this.products = counters.data.products;
-          this.customers = counters.data.customers;
-          
+const counters = await this.$axios.get('counters');
+
+console.log(counters.data);
+
+this.daily_orders = counters.data.daily_orders
+this.weekly_orders = counters.data.weekly_orders
+this.monthly_orders = counters.data.monthly_orders
+
+this.orders = counters.data.orders;
+this.products = counters.data.products;
+this.customers = counters.data.customers;
 
 
-      },
-   }
-   }
+
+},
+}
+}
 </script>

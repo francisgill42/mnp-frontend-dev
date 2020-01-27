@@ -77,6 +77,12 @@
           sortable: false,
           value: 'feedback',
         },
+         {
+          text: 'Customer',
+          align: 'left',
+          sortable: false,
+          value: 'company_name',
+        },
         { text: 'Actions', value: 'action', sortable: false },
       ],
       editedIndex: -1,

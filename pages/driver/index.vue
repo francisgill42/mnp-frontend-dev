@@ -48,7 +48,7 @@ vertical
 
 <v-dialog v-model="dialog" max-width="1200px">
 <template v-slot:activator="{ on }">
-<v-btn color="primary" to="driver/create" class="black--text mb-2">New Item</v-btn>
+<v-btn color="primary" to="driver/create" class="black--text mb-2">New Driver</v-btn>
 </template>
 <v-card>
 <!-- <v-card-title>
@@ -80,9 +80,6 @@ vertical
 <v-col>
 <v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.name" label="Name"></v-text-field>
 </v-col>
-<v-col>
-<v-text-field :readonly="isReadOnly" :rules="Rules"  v-model="editedItem.email" label="Email"></v-text-field>
-</v-col> 
 
 </v-row>
 
@@ -213,32 +210,16 @@ sortable: false,
 value: 'name',
 },
 {
-text: 'Email',
-align: 'left',
-sortable: false,
-value: 'email',
-},
-{
 text: 'Mobile Number',
 align: 'left',
 sortable: false,
 value: 'mobile_number',
 },
-{
-text: 'Address',
-align: 'left',
-sortable: false,
-value: 'address',
-},
 { text: 'Actions', value: 'action', sortable: false },
-],
-emailRules: [
-v => /.+@.+/.test(v) || 'E-mail must be valid',
 ],
 msg:"",
 errors:[
 {password:''},
-{email:''}
 ],
 
 snackbar:false,
@@ -249,7 +230,6 @@ v => !!v || 'This field is required',
 editedIndex: -1,
 editedItem: {
 name: '',
-email: '',
 password:'',
 phone_number:'',
 mobile_number:'',
@@ -262,7 +242,6 @@ IsActive:'',
 },
 defaultItem: {
 name: '',
-email:'',
 password:'', 
 phone_number:'',
 mobile_number:'',
@@ -379,7 +358,6 @@ this.$axios.post('update_password/' + this.editedItem.id, {pwd:this.editedItem.p
 save () {
 const payload = {
 name:this.editedItem.name,
-email:this.editedItem.email,
 phone_number:this.editedItem.phone_number,
 mobile_number:this.editedItem.mobile_number,
 address:this.editedItem.address,

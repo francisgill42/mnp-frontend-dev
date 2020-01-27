@@ -7,6 +7,7 @@
       :clipped="clipped"
       fixed
       app
+      class="no_print"
     >
     <!-- color="#7c5cc4" -->
 
@@ -31,6 +32,7 @@
        
     </v-navigation-drawer>
     <v-app-bar
+      class="no_print"
       dark
       :clipped-left="clipped"
       fixed
@@ -106,10 +108,20 @@ export default {
           title: 'Stock',
           to: '/sku'
         },
+         {
+          icon: 'mdi-chart-bubble',
+          title: 'Stock Adjust',
+          to: '/stock_adjust'
+        },
         {
           icon: 'mdi-chart-bubble',
           title: 'Discount',
           to: '/discount'
+        },
+        {
+        icon: 'mdi-chart-bubble',
+        title: 'Customer Group List',
+        to: '/customer_group'
         },   
          {
           icon: 'mdi-chart-bubble',
@@ -126,12 +138,6 @@ export default {
           title: 'Maintenance User',
           to: '/maintenance'
         },
-         {
-          icon: 'mdi-chart-bubble',
-          title: 'Customer Group List',
-          to: '/customer_group'
-        },
-
         {
           icon: 'mdi-chart-bubble',
           title: 'Request',
@@ -142,6 +148,11 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Feedback',
           to: '/feedback'
+        },
+                {
+        icon: 'mdi-chart-bubble',
+        title: 'Reports',
+        to: '/report'
         },
 
           // {
@@ -182,3 +193,10 @@ export default {
   }
 }
 </script>
+<style>
+@media print{
+    .no_print{
+        display: none;
+        }
+}
+</style>

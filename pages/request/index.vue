@@ -26,9 +26,16 @@ class="elevation-1"
 }"
 >
 <template  v-slot:item.status_text="{ item }">
-<v-chip small class="white--text" :class="myBtnClass(item.status_text)">
-{{item.status_text}}
+<v-chip v-if="item.status_id == 1" small class="black--text" :class="myBtnClass(item.status_text)">
+Open
 </v-chip>
+<v-chip v-else-if="item.status_id == 2" small class="black--text" :class="myBtnClass(item.status_text)">
+Scheduled
+</v-chip>
+<v-chip v-else small class="black--text" :class="myBtnClass(item.status_text)">
+Repaired
+</v-chip>
+
 </template>
 
 
@@ -76,15 +83,15 @@ class="primary mb-2 black--text"
 dark
 flat
 >
-<v-toolbar-title>{{ editedItem.name }}</v-toolbar-title>
+<v-toolbar-title>{{ editedItem.company_name }}</v-toolbar-title>
 </v-toolbar>
 </v-col>
 
 
 </v-row>
 
+
   <v-row>
-    <v-col>{{editedItem.message}}</v-col>
 
      <v-col>
         
@@ -93,24 +100,56 @@ flat
     :src="editedItem.image"
     aspect-ratio="1"
     class="grey lighten-2"
-    max-width="500"
+    max-width="300"
     max-height="300"
     ></v-img>
     </v-col>
 
   </v-row>
+  <v-row>
+          <v-col>{{editedItem.message}}</v-col>
+  </v-row>
 
 <v-row>
-<v-col>
+    
+<v-col cols="6">
 <v-select
 v-model="editedItem.status_id"
-cols="6"
 :items="statusses"
 item-value="id"
 item-text="status" 
 label="Statusses"
 ></v-select>
-
+</v-col>
+<v-col cols="6">
+      <v-menu
+          
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        :return-value.sync="date"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="date"
+            label="Picker in menu"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="date" no-title scrollable>
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+          <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+        </v-date-picker>
+      </v-menu>
+    </v-col>
+    </v-row>
+    <v-row>
+<v-col>
 <v-btn class="primary black--text" text @click="close">Cancel</v-btn>
 &nbsp;
 <v-btn class="primary black--text" text @click="save">Save</v-btn>
@@ -128,7 +167,6 @@ label="Statusses"
 </v-toolbar>
 </template>
 <template v-slot:item.action="{ item }">
-
 <!-- <v-icon
 small
 class="mr-2"
@@ -137,7 +175,6 @@ class="mr-2"
 mdi-eye
 </v-icon>
  -->
-
 <v-icon
 small
 class="mr-2"
@@ -161,6 +198,8 @@ mdi-close-circle
 export default {
 
 data: () => ({
+date: new Date().toISOString().substr(0, 10),
+menu: false,
 
 snackbar:false,
 action:'',
@@ -178,14 +217,25 @@ value: 'id',
 text: 'Customer Name',
 align: 'left',
 sortable: false,
-value: 'name',
+value: 'company_name',
 },
-
 {
 text: 'Status',
 align: 'left',
 sortable: false,
 value: 'status_text',
+},
+{
+text: 'Scheduled Date',
+align: 'left',
+sortable: false,
+value: 'schedule',
+},
+{
+text: 'Submitted At',
+align: 'left',
+sortable: false,
+value: 'created_at',
 },
 { text: 'Action', value: 'action', sortable: false },
 
@@ -197,8 +247,11 @@ Rules : [
 v => !!v || 'This field is required',
 ],
 
-
-statusses:[],
+statusses: [
+    {id:1,status:'Open'},
+    {id:2,status:'Scheduled'},
+    {id:3,status:'Repaired'}
+],
 editedIndex: -1,
 editedItem: {
     id:'',
@@ -264,10 +317,11 @@ myBtnClass(name) {
 async initialize () {
 
 const requests = await this.$axios.get('maintenanceuser');
+
 this.requests = requests.data;
 
-const statusses = await this.$axios.get('status');
-this.statusses = statusses.data;
+// const statusses = await this.$axios.get('status');
+// this.statusses = statusses.data;
 
 
 },
@@ -321,20 +375,19 @@ save () {
 const payload = {
 request_id : this.editedItem.id,
 status_id : this.editedItem.status_id,
+scheduling: this.date
 };
-
 
 this.$axios.post('request_status_change',payload)
 .then(res => {
-
-this.requests[this.editedIndex].status_text = res.data.updated_record.status
-
-this.snackbar = res.data.response_status;
+ console.log(res.data.updated_record);   
+ Object.assign(this.requests[this.editedIndex],res.data.updated_record);
+ this.snackbar = res.data.response_status;
 this.response.msg = res.data.message;
 this.close()
 
 })
-.catch(error => console.log(err));
+.catch(error => console.log(error));
 
 },
 },

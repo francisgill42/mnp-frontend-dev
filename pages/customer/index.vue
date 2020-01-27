@@ -278,10 +278,6 @@ mdi-delete
 </template>
 <script>
 export default {
-// async fetch({store}){
-// await store.dispatch('getRoles')
-// await store.dispatch('getcustomers')       
-// },
 data: () => ({
 
 delivery_from_menu: false,
