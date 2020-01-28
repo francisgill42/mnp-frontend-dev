@@ -30,6 +30,8 @@ class="elevation-1"
 itemsPerPageOptions:[5,10,15]
 }"
 >
+
+
 <template  v-slot:item.status="{ item }">
 <v-chip small class="white--text" :class="myBtnClass(item.status)">
 {{item.status}}
@@ -38,10 +40,11 @@ itemsPerPageOptions:[5,10,15]
 
 
 <template v-slot:top>
-<v-toolbar class="primary title" flat>
+
+<!-- <v-toolbar class="primary title" flat>
 Filters 
-</v-toolbar>
-<v-row class="px-5"> 
+</v-toolbar> -->
+<!-- <v-row class="px-5"> 
 <v-col>
 <v-select
 v-model="product_id" 
@@ -89,10 +92,10 @@ item-text="city_name"
 label="City"
 ></v-select>
 </v-col>
-</v-row>
+</v-row> -->
 
 
-<v-toolbar style="margin-top:-10px;" flat>
+<!-- <v-toolbar style="margin-top:-10px;" flat>
 
 <v-radio-group v-model="status_id" row>
 <span>Status</span>&nbsp;&nbsp;
@@ -112,17 +115,53 @@ label="City"
 <v-radio label="year" value="year"></v-radio>
 </v-radio-group>
 
-</v-toolbar> 
-<v-row class="px-4" style="margin-top:-15px;">
+</v-toolbar>  -->
+<!-- <v-row class="px-4" style="margin-top:-15px;">
 <v-col>
+   <VueJsonToCsv
+    :json-data="orders"
+    :labels="{ 
+      id:{ title: 'order id' },
+      order_total:{ title: 'order total' }, 
+      order_tax:{ title: 'order tax' }, 
+      discounted_price:{ title: 'discounted price' }, 
+      order_gross:{ title: 'order gross' }, 
+      order_confirmed_date:{ title: 'order confirmed date' }, 
+      order_shipped_date:{ title: 'order shipped date' }, 
+      order_delivered_date:{ title: 'order delivered date' },  
+      delivery_date:{ title: 'delivery date' },  
+      payment_due_date:{ title: 'payment due date' },  
+      status:{ title: 'status' },  
+      email	:{ title: 'email' },  
+      phone_number:{ title: 'phone number' },  
+      mobile_number:{ title: 'mobile number' },  
+      ntn:{ title: 'ntn' },  
+      address:{ title: 'address' },  
+      company_name:{ title: 'company name' },  
+      contact_person_name:{ title: 'contact person name' },  
+      payment_type:{ title: 'payment type' },  
+      customer_category_name:{ title: 'customer category name' },
+      state_name:{ title: 'state name' },
+      city_name:{ title: 'city name' },  
+      }"    
+	
+
+
+	
+
+    >
+    <v-btn class="primary mx-2 black--text no_print">
+    <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
+    </v-btn>
+    </VueJsonToCsv>
 <v-btn @click="filter_records"  class="black white--text">
 <v-icon>mdi-filter</v-icon> 
 Filter
 </v-btn>
 
 </v-col>
-</v-row>
-<v-toolbar flat class="primary mt-10">
+</v-row> -->
+<v-toolbar flat>
 <v-toolbar-title dark>Orders</v-toolbar-title>
 <v-divider
 class="mx-4"
@@ -411,7 +450,12 @@ mdi-delete
 </v-app>
 </template>
 <script>
+import VueJsonToCsv from '../../node_modules/vue-json-to-csv'
 export default {
+
+  components : {
+    VueJsonToCsv
+  },
 
 data: () => ({
 date: new Date().toISOString().substr(0, 10),
@@ -440,20 +484,20 @@ search:'',
 dialog: false,
 headers: [
 
-{
-align: 'left',
-value: 'indicator',
-sortable: false,
-},
 
 {
 text: 'Order #',
 align: 'left',
 value: 'id',
 },
-
 {
-text: 'Customer Name',
+text: 'Company Name',
+align: 'left',
+sortable: false,
+value: 'company_name',
+},
+{
+text: 'Contact Person Name',
 align: 'left',
 sortable: false,
 value: 'contact_person_name',
