@@ -20,14 +20,13 @@ Close
 <v-data-table
 :headers="headers"
 :items="orders"
-:search="search"
 class="elevation-1"
 :options.sync="options"
 :server-items-length="data.total"
 @pagination="paginate"
 :items-per-page=10
 :footer-props="{
-itemsPerPageOptions:[5,10,15]
+itemsPerPageOptions:[10]
 }"
 >
 
@@ -97,7 +96,7 @@ label="Customer"
 <v-col>
 <v-select
 v-model="driver_id" 
-:items="drivers"
+:items="driver_listing"
 item-value="id"
 item-text="name" 
 label="Driver"
@@ -200,25 +199,12 @@ label="City"
 <v-icon>mdi-filter</v-icon> 
 Filter
 </v-btn>
-
+<v-btn @click="reset"  class="black--text mx-2">
+<v-icon>mdi-backup-restore</v-icon>&nbsp;Reset
+</v-btn>
 </v-col>
 </v-row>
-<v-toolbar flat class="primary">
-<v-toolbar-title dark>Orders</v-toolbar-title>
-<v-divider
-class="mx-4"
-inset
-vertical
-></v-divider>
-<v-text-field
-v-model.lazy="search"
-@input="searchIt"
-label="Search"
-single-line
-hide-details
-></v-text-field>
-
-
+<v-toolbar flat>
 
 
 
@@ -487,7 +473,6 @@ small
 mdi-delete
 </v-icon> -->
 </template>
-
 </v-data-table>
 </v-app>
 </template>
@@ -592,6 +577,7 @@ v => !!v || 'This field is required',
 ],
 
 drivers:[],
+driver_listing:[],
 order_items:[],
 editedIndex: -1,
 editedItem: {
@@ -611,7 +597,6 @@ msg:''
 orders:[],
 states:[],
 cities:[],
-drivers:[],
 customers:[],
 statusses:[],
 data:[],
@@ -655,17 +640,30 @@ filters: {
 methods: {
 get_cities_by_id(){
 var arr = [];
+var all = [];
+
+
 this.$axios.get('state/'+this.state_id).then((res) =>{
-res.data.map(r => arr.push( {id:r.c_id,city_name:r.c_name} ));
-this.cities = arr;
+  res.data.map(r => arr.push( {id:r.c_id,city_name:r.c_name} ));
+  all = [{id:'',city_name:'All'}];
+  arr.unshift(all[0]);
+  this.cities = arr;
 });
+
+},
+  reset () {
+  this.date_from = '';
+  this.date_to = '';
+  this.product_id = '';
+  this.timestamp = '';
+  this.driver_id = '';
+  this.status_id = '';
+  this.customer_id = '';
+  this.state_id = '';
+  this.city_id = '';
 },
 
 filter_records () {
-
-
-let date_array = this.date_to.split('-')
-date_array[2] = parseInt(date_array[2]) + 1
 
 this.$axios.get('order',{params:{
 'per_page':10,
@@ -679,7 +677,7 @@ this.$axios.get('order',{params:{
 'city' : this.city_id,
 'product' : this.product_id,
 'from' : this.date_from,
-'to' : date_array[0] + '-' + date_array[1] + '-' + date_array[2]
+'to' : this.date_to
 }})
 .then(res => {
 this.orders = res.data.orders;
@@ -723,7 +721,7 @@ var statusses = fl.data.status.map(v=> ({
 
 this.statusses = statusses;
 this.customers = fl.data.customers;
-this.drivers = fl.data.drivers;
+this.driver_listing = fl.data.drivers;
 this.states = fl.data.states;
 this.cities = fl.data.cities;
 this.product_list = fl.data.products;
@@ -849,9 +847,6 @@ this.data = res.data;
 
 },
 async initialize () {
-
-
-
 
 const drivers = await this.$axios.get('driver');
 this.drivers = drivers.data;
