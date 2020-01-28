@@ -100,7 +100,7 @@
                   item-text="customer_category_name" 
                   label="Customer Group"
                   ></v-select>
-                  
+                  <span v-if="dropdown" class="error--text">This field is required</span>
                   </v-col>
                   </v-row>
                   </v-form>
@@ -145,6 +145,7 @@
 
     data: () => ({
       search:'',
+      dropdown:'',
       snackbar:false,
       dialog: false,
       headers: [
@@ -269,49 +270,50 @@
       },
 
       save () {
-
-
-//        console.log(this.editedItem.customer_category_ids);
+        
         const payload = {
             discount_title: this.editedItem.discount_title,
             discount_amount: this.editedItem.discount_amount,
             discount_type: this.editedItem.discount_type,
-            customer_category_ids: this.editedItem.customer_category_ids
+            customer_category_ids: this.editedItem.customer_category_ids           
+            }
+
+          if(this.editedItem.discount_title == ''  ||
+             this.editedItem.discount_amount == '' ||
+             this.editedItem.discount_type == '' ||
+             this.editedItem.customer_category_ids.length == 0
+             )
+             {
+              this.dropdown = true;
+               
+             }
+             else{
+               this.dropdown = false;
+             }
+
+            if(this.$refs.form.validate() && this.dropdown == false){              
+            this.$axios.post('discount',payload)
+            .then((res) => {
+
+            if(res.data.response_status){ 
+
+            this.discounts.push(res.data.new_record)
+            this.snackbar = res.data.response_status;
+            this.response.msg = res.data.message;
+
+            this.close()
+
+            }
+
+            });
+
+
+
            
             }
 
-           if (this.editedIndex > -1) {
-
-            this.$axios.put('discount/' + this.editedItem.id,payload)
-            .then(res => {
-              if(res.data.response_status){ 
-              const index = this.discounts.findIndex(item => item.id == this.editedItem.id)
-              Object.assign(this.discounts[index],res.data.updated_record);
-              this.snackbar = res.data.response_status;
-              this.response.msg = res.data.message;
-              this.close()
-              }
-            })
-            .catch(error => console.log(err));
-           }
-           else{
-          if(this.$refs.form.validate()){              
-            this.$axios.post('discount',payload)
-              .then((res) => {
-
-              if(res.data.response_status){ 
-
-              this.discounts.push(res.data.new_record)
-              this.snackbar = res.data.response_status;
-              this.response.msg = res.data.message;
-
-              this.close()
-              
-              }
-
-            });
-            }
-            }
+         
+         
         
       },
     },
