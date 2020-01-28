@@ -60,10 +60,10 @@ tile class="primary" size="60">
 
 </v-row>
 <v-row>
-<v-col cols="7">
+<v-col cols="9">
     <RecentOrder />
 </v-col>
-<v-col cols="5">
+<v-col cols="3">
 <v-row>
 
 <!-- <v-col>
@@ -124,7 +124,8 @@ tile class="primary" size="60">
 </v-card>
 
 </v-col>
-
+</v-row>
+<v-row>
 <v-col>
 <v-card class="no_print">
 
