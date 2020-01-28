@@ -15,38 +15,35 @@ itemsPerPageOptions:[10]
 
 <template v-slot:top>
 <v-toolbar class="primary title" flat>
-Orders By Product Report 
+Orders By Status Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
     :json-data="orders"
     :labels="{ 
-      order_id:{ title: 'Order ID' },
-      product_title:{ title: 'Product' },
-      legacy_code_sku:{ title: 'SKU Code' },
-      product_price:{ title: 'product_price' },
-      expiry_date:{ title: 'Expiry Date' },
-      created_at:{ title: 'Ordered DateTime' },
+      id:{ title: 'Order ID' },
+      name:{ title: 'Driver Name' },
+      status:{ title: 'Order Status' },
+      order_total:{ title: 'Order Amount' },
+      order_confirmed_date:{ title: 'Assigned Date' },
       }"    
-	
-
-
-	
-
     >
+     
     <v-btn class="primary mx-2 black--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
 </v-toolbar>
 
+
+
 <v-row class="px-5"> 
 <v-col>
 <v-select
-v-model="product_id" 
-:items="product_list"
+v-model="status_id" 
+:items="list"
 item-value="id"
-item-text="product_title" 
-label="Products"
+item-text="status" 
+label="Status"
 ></v-select>
 </v-col>
 </v-row>
@@ -93,6 +90,7 @@ label="Products"
             v-on="on"
           ></v-text-field>
         </template>
+        
         <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
@@ -113,7 +111,16 @@ Filter
 </v-col>
 </v-row>
 </template>
+<template v-slot:item.order_total="{ item }">
+{{item.order_total | get_decimal_value}}
+</template>
 
+
+<template  v-slot:item.status="{ item }">
+<v-chip small class="white--text" :class="myBtnClass(item.status)">
+{{item.status}}
+</v-chip>
+</template>
 
 </v-data-table>
 </v-app>
@@ -131,8 +138,8 @@ menu_from: false,
 date_to: '',
 menu_to: false,
 
-product_id:'',    
-
+id:'',    
+status_id:'',
 options:{
 sortBy:['id','order_total','created_at'],
 sortDesc:[true]
@@ -142,44 +149,53 @@ headers: [
 {
 text: 'Order #',
 align: 'left',
-value: 'order_id',
+value: 'id',
 sortable:false,
 },
 
 {
-text: 'Product',
+text: 'Status',
 align: 'left',
-value: 'product_title',
+value: 'status',
 sortable:false,
 },
 {
-text: 'SKU Code',
+text: 'Order Amount',
 align: 'left',
-value: 'legacy_code_sku',
+value: 'order_total', 
 sortable:false,
 },
 {
-text: 'Product Price',
+text: 'Assigned Date',
 align: 'left',
-value: 'product_price',
+value: 'order_confirmed_date',
 sortable:false,
 },
 {
-text: 'Expiry Date',
+text: 'Shipped Date',
 align: 'left',
-value: 'expiry_date',
+value: 'order_shipped_date',
 sortable:false,
 },
+{
+text: 'Delivered Date',
+align: 'left',
+value: 'order_delivered_date',
+sortable:false,
+},
+
 {
 text: 'Ordered DateTime',
 align: 'left',
 value: 'created_at',
 sortable:false,
-}
+},
+
+
 ],
 
 orders:[],
-product_list:[],
+list:[],
 }),
 
 computed: {
@@ -193,22 +209,39 @@ filters: {
 },
 created () {
  this.get_data()
+ this.myBtnClass()
 },
 methods: {
+myBtnClass(name) {
+switch(name) {
 
+case 'pending':
+return 'warning darken-3'
+case 'processing':
+return 'primary'
+case 'loaded':
+return 'teal'
+case 'on the way':
+return 'blue lighten-1'
+case 'delivered':
+return 'green lighten-1'
+default:
+return 'error'
+}
+},
   reset () {
   this.date_from = '';
   this.date_to = '';
-  this.product_id = '';
+  this.status_id = '';
 },
 
   async get_data () {
         var all = [];
         const fl = await this.$axios.get('filter_listing'); 
-        console.log(fl.data.products);
-        all = [{id:'',product_title:'All'}];
-        fl.data.products.unshift(all[0]);
-        this.product_list = fl.data.products;   
+
+        all = [{id:'',status:'All'}];
+        fl.data.status.unshift(all[0]);
+        this.list = fl.data.status;   
   },
 
   filter_records(){
@@ -221,22 +254,36 @@ const sortBy =  this.options.sortDesc.length > 0 || this.options.sortDesc[0]
 var payload = {params:{
 'sort_by':sortBy,
 'order_by':orderBy,
-'product' : this.product_id,
+'status' : this.status_id,
 'from' : this.date_from,
 'to' : this.date_to,
 }};
 
-this.$axios.get('orders_by_products',payload)
+this.$axios.get('export_orders',payload)
 .then(res => {
-this.orders = res.data;
+
+    console.log(res.data);
+
+
+        var data = res.data.map(v => ({
+            id:v.id,
+            status:v.status,
+            order_total:v.order_total,
+            order_confirmed_date: v.order_confirmed_date,
+            order_shipped_date: v.order_shipped_date,
+            order_delivered_date: v.order_delivered_date,
+            created_at:v.created_at ,
+
+        }))
+        console.log(data);
+        this.orders = data;
+
 });
 
 },
 
 
-get_decimal_value (value) {
-return (Math.round(value * 100) / 100).toFixed(2);
-},
+
 
 async paginate () {
   this.filter_records()

@@ -15,16 +15,15 @@ itemsPerPageOptions:[10]
 
 <template v-slot:top>
 <v-toolbar class="primary title" flat>
-Orders By Product Report 
+Orders By Customer Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
     :json-data="orders"
     :labels="{ 
-      order_id:{ title: 'Order ID' },
-      product_title:{ title: 'Product' },
-      legacy_code_sku:{ title: 'SKU Code' },
-      product_price:{ title: 'product_price' },
-      expiry_date:{ title: 'Expiry Date' },
+      id:{ title: 'Order ID' },
+      company_name:{ title: 'Company Name' },
+      contact_person_name:{ title: 'Contact Person' },
+      order_total:{ title: 'Order Amount' },
       created_at:{ title: 'Ordered DateTime' },
       }"    
 	
@@ -39,14 +38,16 @@ Orders By Product Report
     </VueJsonToCsv>
 </v-toolbar>
 
+
+
 <v-row class="px-5"> 
 <v-col>
 <v-select
-v-model="product_id" 
-:items="product_list"
+v-model="id" 
+:items="list"
 item-value="id"
-item-text="product_title" 
-label="Products"
+item-text="company_name" 
+label="Customers"
 ></v-select>
 </v-col>
 </v-row>
@@ -93,6 +94,7 @@ label="Products"
             v-on="on"
           ></v-text-field>
         </template>
+        
         <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
@@ -113,6 +115,9 @@ Filter
 </v-col>
 </v-row>
 </template>
+<template v-slot:item.order_total="{ item }">
+{{item.order_total | get_decimal_value}}
+</template>
 
 
 </v-data-table>
@@ -131,7 +136,7 @@ menu_from: false,
 date_to: '',
 menu_to: false,
 
-product_id:'',    
+id:'',    
 
 options:{
 sortBy:['id','order_total','created_at'],
@@ -142,32 +147,26 @@ headers: [
 {
 text: 'Order #',
 align: 'left',
-value: 'order_id',
+value: 'id',
 sortable:false,
 },
 
 {
-text: 'Product',
+text: 'Company Name',
 align: 'left',
-value: 'product_title',
+value: 'company_name',
 sortable:false,
 },
 {
-text: 'SKU Code',
+text: 'Contact Person',
 align: 'left',
-value: 'legacy_code_sku',
+value: 'contact_person_name',
 sortable:false,
 },
 {
-text: 'Product Price',
+text: 'Order Amount',
 align: 'left',
-value: 'product_price',
-sortable:false,
-},
-{
-text: 'Expiry Date',
-align: 'left',
-value: 'expiry_date',
+value: 'order_total',
 sortable:false,
 },
 {
@@ -179,7 +178,7 @@ sortable:false,
 ],
 
 orders:[],
-product_list:[],
+list:[],
 }),
 
 computed: {
@@ -199,16 +198,16 @@ methods: {
   reset () {
   this.date_from = '';
   this.date_to = '';
-  this.product_id = '';
+  this.id = '';
 },
 
   async get_data () {
         var all = [];
         const fl = await this.$axios.get('filter_listing'); 
-        console.log(fl.data.products);
-        all = [{id:'',product_title:'All'}];
-        fl.data.products.unshift(all[0]);
-        this.product_list = fl.data.products;   
+
+        all = [{id:'',company_name:'All'}];
+        fl.data.customers.unshift(all[0]);
+        this.list = fl.data.customers;   
   },
 
   filter_records(){
@@ -221,22 +220,21 @@ const sortBy =  this.options.sortDesc.length > 0 || this.options.sortDesc[0]
 var payload = {params:{
 'sort_by':sortBy,
 'order_by':orderBy,
-'product' : this.product_id,
+'customer' : this.id,
 'from' : this.date_from,
 'to' : this.date_to,
 }};
 
-this.$axios.get('orders_by_products',payload)
+this.$axios.get('orders_by_customers',payload)
 .then(res => {
 this.orders = res.data;
+console.log(this.orders);
 });
 
 },
 
 
-get_decimal_value (value) {
-return (Math.round(value * 100) / 100).toFixed(2);
-},
+
 
 async paginate () {
   this.filter_records()
