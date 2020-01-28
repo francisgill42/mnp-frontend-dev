@@ -2,9 +2,9 @@
 <div>
 <v-row>
 <v-col>
-<v-card class="no_print">
+<v-card class="no_print" >
 
-<v-list-item four-line>
+<v-list-item four-line >
 <v-list-item-content>
 <div class="overline mb-4">Today's Orders</div>
 <v-list-item-title color="pink darken-2" class=" headline mb-1">{{daily_orders.orders_count}} </v-list-item-title>
@@ -13,7 +13,7 @@
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon>mdi-package-variant</v-icon></span>
+<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -32,7 +32,7 @@ tile class="primary" size="60">
 
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon>mdi-package-variant</v-icon></span>
+<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -52,7 +52,67 @@ tile class="primary" size="60">
 
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon>mdi-package-variant</v-icon></span>
+<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+</v-col>
+
+</v-row>
+
+<v-row>
+<v-col>
+<v-card class="no_print" >
+
+<v-list-item four-line >
+<v-list-item-content>
+<div class="overline mb-4">Today's Order Income</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{daily_orders.orders_amount | get_decimal_value}} </v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon class="black--text">mdi-sale</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+
+</v-col>
+
+<v-col>
+<v-card class="no_print">
+<v-list-item four-line>
+<v-list-item-content>
+<div class="overline mb-4">Last Week Order Income</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{weekly_orders.orders_amount | get_decimal_value}}</v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon class="black--text">mdi-sale</v-icon></span>
+</v-list-item-avatar>
+</v-list-item>
+</v-card>
+</v-col>
+
+
+<v-col>
+<v-card class="no_print">
+
+<v-list-item four-line>
+<v-list-item-content>
+<div class="overline mb-4">Last Month Order Income</div>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{monthly_orders.orders_amount | get_decimal_value}}</v-list-item-title>
+<v-list-item-subtitle>
+</v-list-item-subtitle>
+</v-list-item-content>
+
+<v-list-item-avatar
+tile class="primary" size="60">
+<span><v-icon class="black--text">mdi-sale</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -78,7 +138,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon> mdi-currency-usd </v-icon> </span>
+<span><v-icon class="black--text"> mdi-currency-usd </v-icon> </span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -97,7 +157,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon>mdi-nutrition</v-icon></span>
+<span><v-icon class="black--text">mdi-nutrition</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -118,7 +178,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon>mdi-account</v-icon></span>
+<span><v-icon class="black--text">mdi-account</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -138,7 +198,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon>mdi-package-variant</v-icon></span>
+<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -258,13 +318,17 @@ monthly_orders:'',
 created () {
 this.initialize()
 },
+filters: {
+  get_decimal_value: function (value) {
+    if (!value) return ''
+    return (Math.round(value * 100) / 100).toFixed(2);
+  }
+},
 methods: {
 
 async initialize () {
 
 const counters = await this.$axios.get('counters');
-
-console.log(counters.data);
 
 this.daily_orders = counters.data.daily_orders
 this.weekly_orders = counters.data.weekly_orders

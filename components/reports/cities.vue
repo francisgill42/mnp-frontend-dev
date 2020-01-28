@@ -15,16 +15,15 @@ itemsPerPageOptions:[10]
 
 <template v-slot:top>
 <v-toolbar class="primary title" flat>
-Orders By Status Report 
+Orders By Cities Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
     :json-data="orders"
     :labels="{ 
       id:{ title: 'Order ID' },
-      name:{ title: 'Driver Name' },
-      status:{ title: 'Order Status' },
       order_total:{ title: 'Order Amount' },
-      order_confirmed_date:{ title: 'Assigned Date' },
+      status:{ title: 'Order Status' },      
+      created_at:{ title: 'Ordered DateTime' },
       }"    
     >
      
@@ -39,11 +38,11 @@ Orders By Status Report
 <v-row class="px-5"> 
 <v-col>
 <v-select
-v-model="status_id" 
+v-model="id" 
 :items="list"
 item-value="id"
-item-text="status" 
-label="Status"
+item-text="city_name" 
+label="City"
 ></v-select>
 </v-col>
 </v-row>
@@ -139,7 +138,6 @@ date_to: '',
 menu_to: false,
 
 id:'',    
-status_id:'',
 options:{
 sortBy:['id','order_total','created_at'],
 sortDesc:[true]
@@ -153,37 +151,20 @@ value: 'id',
 sortable:false,
 },
 
-{
-text: 'Status',
-align: 'left',
-value: 'status',
-sortable:false,
-},
+
 {
 text: 'Order Amount',
 align: 'left',
 value: 'order_total', 
 sortable:false,
 },
-{
-text: 'Assigned Date',
-align: 'left',
-value: 'order_confirmed_date',
-sortable:false,
-},
-{
-text: 'Shipped Date',
-align: 'left',
-value: 'order_shipped_date',
-sortable:false,
-},
-{
-text: 'Delivered Date',
-align: 'left',
-value: 'order_delivered_date',
-sortable:false,
-},
 
+{
+text: 'Status',
+align: 'left',
+value: 'status',
+sortable:false,
+},  
 {
 text: 'Ordered DateTime',
 align: 'left',
@@ -232,22 +213,17 @@ return 'error'
   reset () {
   this.date_from = '';
   this.date_to = '';
-  this.status_id = '';
+  this.id = '';
 },
 
   async get_data () {
         var all = [];
         const fl = await this.$axios.get('filter_listing'); 
 
-        all = [{id:'',status:'All'}];
-        fl.data.status.unshift(all[0]);
-        
-        var statusses = fl.data.status.map(v=> ({
-        id : v.id,
-        status : (v.status == 'on the way') ? 'Dispatch' : v.status.charAt(0).toUpperCase() + v.status.slice(1)  
-        }))
+        all = [{id:'',city_name:'All'}];
+        fl.data.cities.unshift(all[0]);
 
-        this.list = statusses;   
+        this.list = fl.data.cities;   
   },
 
   filter_records(){
@@ -260,33 +236,17 @@ const sortBy =  this.options.sortDesc.length > 0 || this.options.sortDesc[0]
 var payload = {params:{
 'sort_by':sortBy,
 'order_by':orderBy,
-'status' : this.status_id,
+'city' : this.id,
 'from' : this.date_from,
 'to' : this.date_to,
 }};
 
-this.$axios.get('export_orders',payload)
+this.$axios.get('orders_by_cities',payload)
 .then(res => {
-
-        var data = res.data.map(v => ({
-            id:v.id,
-            status:v.status,
-            order_total:v.order_total,
-            order_confirmed_date: v.order_confirmed_date,
-            order_shipped_date: v.order_shipped_date,
-            order_delivered_date: v.order_delivered_date,
-            created_at:v.created_at ,
-
-        }))
-        this.orders = data;
-
+  this.orders = res.data;
 });
 
 },
-
-
-
-
 async paginate () {
   this.filter_records()
 },
