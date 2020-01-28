@@ -65,13 +65,14 @@
 
             <v-card-text>
               <v-container>
+                <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="editedItem.discount_title" label="Discount Name"></v-text-field>
+                    <v-text-field :rules="Rules"  v-model="editedItem.discount_title" label="Discount Name"></v-text-field>
                   </v-col>
                  
                    <v-col>
-                    <v-text-field type="number" v-model="editedItem.discount_amount" label="Discount Amount"></v-text-field>
+                    <v-text-field :rules="Rules"  type="number" min="0" v-model.number="editedItem.discount_amount" label="Discount Amount"></v-text-field>
                   </v-col>
                  
                  
@@ -79,6 +80,7 @@
                    <v-row>
                   <v-col>
                   <v-select
+                  :rules="Rules" 
                   v-model="editedItem.discount_type" 
                   :items="['percentage','amount']"
                   label="Discount Type"
@@ -88,6 +90,7 @@
                    <v-row>
                   <v-col>
                   <v-select
+                  :rules="Rules" 
                   v-model="editedItem.customer_category_ids" 
                   :items="cat_to_upload"
                   attach
@@ -100,6 +103,7 @@
                   
                   </v-col>
                   </v-row>
+                  </v-form>
               </v-container>
             </v-card-text>
 
@@ -191,6 +195,9 @@
         customer_category_ids:[],
       
       },
+      Rules : [
+      v => !!v || 'This field is required',
+      ],
       response : {
         msg:''
       },
@@ -262,48 +269,49 @@
       },
 
       save () {
-        console.log(this.editedItem.customer_category_ids);
-      //   const payload = {
-      //       discount_title: this.editedItem.discount_title,
-      //       discount_amount: this.editedItem.discount_amount,
-      //       discount_type: this.editedItem.discount_type,
-      //       customer_category_ids: this.editedItem.customer_category_ids
+
+
+//        console.log(this.editedItem.customer_category_ids);
+        const payload = {
+            discount_title: this.editedItem.discount_title,
+            discount_amount: this.editedItem.discount_amount,
+            discount_type: this.editedItem.discount_type,
+            customer_category_ids: this.editedItem.customer_category_ids
            
-      //       }
+            }
 
-      //      if (this.editedIndex > -1) {
+           if (this.editedIndex > -1) {
 
-      //       this.$axios.put('discount/' + this.editedItem.id,payload)
-      //       .then(res => {
-      //         if(res.data.response_status){ 
-      //         const index = this.discounts.findIndex(item => item.id == this.editedItem.id)
-      //         Object.assign(this.discounts[index],res.data.updated_record);
-      //         this.snackbar = res.data.response_status;
-      //         this.response.msg = res.data.message;
-      //         this.close()
-      //         }
-      //       })
-      //       .catch(error => console.log(err));
-      //      }
-      //      else{
+            this.$axios.put('discount/' + this.editedItem.id,payload)
+            .then(res => {
+              if(res.data.response_status){ 
+              const index = this.discounts.findIndex(item => item.id == this.editedItem.id)
+              Object.assign(this.discounts[index],res.data.updated_record);
+              this.snackbar = res.data.response_status;
+              this.response.msg = res.data.message;
+              this.close()
+              }
+            })
+            .catch(error => console.log(err));
+           }
+           else{
+          if(this.$refs.form.validate()){              
+            this.$axios.post('discount',payload)
+              .then((res) => {
+
+              if(res.data.response_status){ 
+
+              this.discounts.push(res.data.new_record)
+              this.snackbar = res.data.response_status;
+              this.response.msg = res.data.message;
+
+              this.close()
               
-      //       this.$axios.post('discount',payload)
-      //         .then((res) => {
+              }
 
-      //         if(res.data.response_status){ 
-
-      //         this.discounts.push(res.data.new_record)
-      //         this.snackbar = res.data.response_status;
-      //         this.response.msg = res.data.message;
-
-      //         this.close()
-              
-      //         }
-
-      //       });
-         
-      //      }
-
+            });
+            }
+            }
         
       },
     },
