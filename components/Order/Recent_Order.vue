@@ -21,22 +21,142 @@ Close
 :headers="headers"
 :items="orders"
 class="elevation-1"
-:items-per-page=10
 hide-default-footer
 >
+
+
 <template  v-slot:item.status="{ item }">
 <v-chip small class="white--text" :class="myBtnClass(item.status)">
-{{item.status}}
+  {{(item.status == 'on the way') ? 'Dispatch' : item.status}}
 </v-chip>
 </template>
 
 
 <template v-slot:top>
 
-<v-toolbar flat>
-<v-toolbar-title dark class="title">Recent Orders</v-toolbar-title>
+<!-- <v-toolbar class="primary title" flat>
+Filters 
+</v-toolbar> -->
+<!-- <v-row class="px-5"> 
+<v-col>
+<v-select
+v-model="product_id" 
+:items="product_list"
+item-value="id"
+item-text="product_title" 
+label="Products"
+></v-select>
+</v-col>
+<v-col>
+<v-select
+v-model="customer_id" 
+:items="customers"
+item-value="id"
+item-text="company_name" 
+label="Customer"
+></v-select>
+</v-col>
+<v-col>
+<v-select
+v-model="driver_id" 
+:items="drivers"
+item-value="id"
+item-text="name" 
+label="Driver"
+></v-select>
+</v-col>
+<v-col>
+<v-select
+@change="get_cities_by_id"
+v-model="state_id" 
+:items="states"
+item-value="id"
+item-text="state_name" 
+label="State"
+></v-select>
+</v-col>
+
+<v-col>
+<v-select
+v-model="city_id" 
+:items="cities"
+item-value="id"
+item-text="city_name" 
+label="City"
+></v-select>
+</v-col>
+</v-row> -->
+
+
+<!-- <v-toolbar style="margin-top:-10px;" flat>
+
+<v-radio-group v-model="status_id" row>
+<span>Status</span>&nbsp;&nbsp;
+<v-radio label="All" value=""></v-radio>
+<v-radio v-for="status in statusses" :key="status.id" :label="status.status" :value="status.id"></v-radio>
+</v-radio-group>
+
+</v-toolbar>       
+<v-toolbar style="margin-top:-15px;" flat>
+
+<v-radio-group v-model="timestamp" row>
+<span>Timestamp</span>&nbsp;&nbsp;
+<v-radio label="All" value=""></v-radio>
+<v-radio label="today" value="today"></v-radio>
+<v-radio label="week" value="week"></v-radio>
+<v-radio label="month" value="month"></v-radio>
+<v-radio label="year" value="year"></v-radio>
+</v-radio-group>
+
+</v-toolbar>  -->
+<!-- <v-row class="px-4" style="margin-top:-15px;">
+<v-col>
+   <VueJsonToCsv
+    :json-data="orders"
+    :labels="{ 
+      id:{ title: 'order id' },
+      order_total:{ title: 'order total' }, 
+      order_tax:{ title: 'order tax' }, 
+      discounted_price:{ title: 'discounted price' }, 
+      order_gross:{ title: 'order gross' }, 
+      order_confirmed_date:{ title: 'order confirmed date' }, 
+      order_shipped_date:{ title: 'order shipped date' }, 
+      order_delivered_date:{ title: 'order delivered date' },  
+      delivery_date:{ title: 'delivery date' },  
+      payment_due_date:{ title: 'payment due date' },  
+      status:{ title: 'status' },  
+      email	:{ title: 'email' },  
+      phone_number:{ title: 'phone number' },  
+      mobile_number:{ title: 'mobile number' },  
+      ntn:{ title: 'ntn' },  
+      address:{ title: 'address' },  
+      company_name:{ title: 'company name' },  
+      contact_person_name:{ title: 'contact person name' },  
+      payment_type:{ title: 'payment type' },  
+      customer_category_name:{ title: 'customer category name' },
+      state_name:{ title: 'state name' },
+      city_name:{ title: 'city name' },  
+      }"    
+	
+
+
+	
+
+    >
+    <v-btn class="primary mx-2 accent--text no_print">
+    <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
+    </v-btn>
+    </VueJsonToCsv>
+<v-btn @click="filter_records"  class="black white--text">
+<v-icon>mdi-filter</v-icon> 
+Filter
+</v-btn>
+
+</v-col>
+</v-row> -->
+<v-toolbar flat class="primary">
+<v-toolbar-title class="accent--text">Recent Orders</v-toolbar-title>
 <v-spacer></v-spacer>
-      <!-- <v-btn class="primary mx-2 black--text no_print" @click="print_me"><v-icon>mdi-printer</v-icon>&nbsp; print</v-btn> -->
     <VueJsonToCsv
     :json-data="orders"
     :labels="{ 
@@ -66,27 +186,31 @@ hide-default-footer
       state_name:{ title: 'state name' },
       city_name:{ title: 'city name' },  
       }"    
-	
-
-
-	
-
     >
-    <v-btn class="primary mx-2 black--text no_print">
+    <v-btn class="mx-2 no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
 
-<v-btn class="primary mx-2 black--text no_print" to="order"><v-icon>mdi-eye</v-icon>&nbsp; View All</v-btn>
+<v-btn class="mx-2 no_print" to="order"><v-icon>mdi-eye</v-icon>&nbsp; View All</v-btn>
+
 <v-dialog v-model="dialog" max-width="1200px">
+<!-- <template v-slot:activator="{ on }">
+<v-btn color="primary" to="order/create" class="accent--text mb-2">New Item</v-btn>
+</template> -->
 <v-card>
+<!-- <v-card-title>
+
+<span class="headline">{{ formTitle }}</span> -->
+
+
 <v-card-text>
 
 <v-container>
 <v-row>
 <v-col>
 <v-toolbar
-class="primary mb-2 black--text"
+class="primary mb-2 accent--text"
 dark
 flat
 >
@@ -127,14 +251,14 @@ flat
 <td height="25" width="15%"><img style="padding-top:5px;" width="30%" :src="item.product_image" alt="Orange Room Digital"/></td>
 <td width="14%" class="text-center">{{ item.product_quantity }} 
 <span 
-v-if="editedItem.order_status_id == 1" 
+
 :class="get_stock_info(item.stock).class"
 >
 {{get_stock_info(item.stock).text}}
 {{item.stock > 0 ? '(' + item.stock + ')' : '' }} 
 
 </span>  
-
+<!-- v-if="editedItem.order_status_id == 1"  -->
 </td>
 
 <td>AED {{ item.product_price }}</td>
@@ -158,7 +282,7 @@ label="Products"
 <td v-if="!isReadOnly"><v-text-field  type="number"  v-model="order_item_quantity[index]"></v-text-field>
 </td>
 <td v-if="!isReadOnly">
-<v-btn class="primary black--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
+<v-btn class="primary accent--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
 <v-icon>mdi-content-save</v-icon>
 </v-btn>
 
@@ -177,9 +301,10 @@ label="Products"
 
 </v-row>
 <v-divider></v-divider>
-<v-row>
 <v-form ref="form" lazy-validation>
-<v-col>
+
+<v-row>
+<v-col cols="3">
 <v-autocomplete
 
 class="mb-2"
@@ -191,43 +316,104 @@ item-value="id"
 item-text="name" 
 label="Driver"
 ></v-autocomplete>
-
-<v-btn class="primary black--text" text @click="close">Cancel</v-btn>
-&nbsp;
-<v-btn v-if="!isReadOnly" class="primary black--text" text @click="save">Save</v-btn>
-
 </v-col>
-</v-form>
-
-<v-col>
-<v-spacer></v-spacer>
-</v-col>
-<v-col> 
+<v-col md="4">
 <template>
-<v-simple-table dense>
-<template v-slot:default>
+  <v-row>
+    <v-col>
+      <v-menu
+      
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        :return-value.sync="date"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            :rules="Rules"
+            dense
+            v-model="date"
+            label="Payment Due Date"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="date" no-title scrollable>
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+          <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+        </v-date-picker>
+      </v-menu>
+    </v-col>
+   <v-col>
+      <v-menu
+        ref="menu2"
+        v-model="menu2"
+        :close-on-content-click="false"
+        :return-value.sync="date2"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            :rules="Rules"
+            dense
+            v-model="date2"
+            label="Delivery Date"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="date2" no-title scrollable>
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menu2 = false">Cancel</v-btn>
+          <v-btn text color="primary" @click="$refs.menu2.save(date)">OK</v-btn>
+        </v-date-picker>
+      </v-menu>
+    </v-col>
+  
+    </v-row>
+
+</template>
+</v-col>
+<v-simple-table dense style="margin-left:11%; width:30%;">
 <tbody>
 <tr>
-<th style="padding-left:75px; width:60%;">Gross Amount</th>
+<th>Gross Amount</th>
 <td style="border:none;">AED {{ get_decimal_value(editedItem.order_gross) }}</td>
 </tr>    
 <tr>
-<th style="padding-left:75px; width:60%;">Tax (VAT %5)</th>
+<th>Discount Amount</th>
+<td style="border:none;">AED {{ get_decimal_value(editedItem.discounted_price) }}</td>
+</tr>    
+<tr>
+<th>Tax (VAT %5)</th>
 <td style="border:;">AED {{ get_decimal_value(editedItem.order_tax) }}</td>
 </tr>
 <tr>
-<th style="padding-left:75px; width:60%;">Grand Total</th>
+<th>Grand Total</th>
 <th>AED {{get_decimal_value(editedItem.order_total)}}  </th>
 </tr>
 
 
 </tbody>
-
-</template>
 </v-simple-table>
-</template>
-</v-col>
+
 </v-row>
+<v-row>
+<v-col>
+<v-btn class="primary accent--text" text @click="close">Cancel</v-btn>
+&nbsp;
+<v-btn v-if="!isReadOnly" class="primary accent--text" text @click="save">Save</v-btn>
+</v-col>
+
+</v-row>
+
+</v-form>
 
 
 
@@ -309,7 +495,10 @@ components : {
 },    
 
 data: () => ({
-
+date: '',
+date2: '',
+menu: false,
+menu2: false,
 order_item:{
 id:[]
 },
