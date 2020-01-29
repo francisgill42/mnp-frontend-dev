@@ -89,7 +89,7 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.action="{ item }">
+    <!-- <template v-slot:item.action="{ item }">
       <v-icon
         small
         class="mr-2"
@@ -103,7 +103,7 @@
       >
         mdi-delete
       </v-icon>
-    </template>
+    </template> -->
     <template v-slot:no-data>
       <!-- <v-btn color="primary" @click="initialize">Reset</v-btn> -->
     </template>
@@ -153,7 +153,7 @@
           align: 'left',
           value: 'expiry_date',
         },
-        { text: 'Actions', value: 'action', sortable: false },
+        // { text: 'Actions', value: 'action', sortable: false },
       ],
       editedIndex: -1,
       editedItem: {

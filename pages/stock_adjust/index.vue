@@ -88,7 +88,7 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.action="{ item }">
+    <!-- <template v-slot:item.action="{ item }">
       <v-icon
         small
         class="mr-2"
@@ -102,7 +102,7 @@
       >
         mdi-delete
       </v-icon>
-    </template>
+    </template> -->
   </v-data-table>  
   
   </v-app>
@@ -152,7 +152,7 @@
           sortable: false,
           value: 'created_at',
         },
-        { text: 'Actions', value: 'action', sortable: false },
+        // { text: 'Actions', value: 'action', sortable: false },
       ],
       editedIndex: -1,
       editedItem: {

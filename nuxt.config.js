@@ -82,8 +82,8 @@ router: {
       dark: false,
       themes: {
         light: {
-          primary: '#F1D600',
-          accent: colors.grey.darken3,
+          primary: '#333333',
+          accent: '#F9F8F4',
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,

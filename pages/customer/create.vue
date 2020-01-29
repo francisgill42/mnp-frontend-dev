@@ -48,7 +48,7 @@ Close
 </v-row>
 <v-row>
 <v-col>
-<v-text-field type="number" :rules="Rules" v-model="ntn" label="VAT Number"></v-text-field>
+<v-text-field type="number" min="0" v-model.number="ntn" label="VAT Number"></v-text-field>
 </v-col>
 <v-col>
 <v-select
@@ -63,10 +63,10 @@ label="Group"
 </v-row>
 <v-row>
 <v-col>
-<v-text-field type="number" :rules="Rules" v-model="phone_number" label="Phone Number"></v-text-field>
+<v-text-field type="number" min="0" :rules="Rules" v-model.number="phone_number" label="Phone Number"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field type="number" :rules="Rules" v-model="mobile_number" label="Mobile Number"></v-text-field>
+<v-text-field type="number" min="0" :rules="Rules" v-model.number="mobile_number" label="Mobile Number"></v-text-field>
 </v-col>
 </v-row>
 <v-row>
@@ -184,7 +184,7 @@ label="Is Active"
 <v-col>
 <v-btn
 color="primary"
-class="mr-4 black--text"
+class="mr-4 accent--text"
 @click="register"
 >
 Submit
@@ -273,6 +273,11 @@ v => !!v || 'This field is required',
 ],
 
 }),
+computed:{
+  trim_me () {
+    //return this.phone_number = Math.abs(this.phone_number);
+  }
+},
 methods:{
 
 get_cities_by_id(){
@@ -309,7 +314,7 @@ if(res.data.response_status){
 
 this.msg = res.data.message;
 setTimeout(() => {
-this.$router.push('/customer');
+  this.$router.push('/customer');
 },1000);
 }
 else{

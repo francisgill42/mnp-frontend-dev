@@ -34,7 +34,7 @@ itemsPerPageOptions:[5,10,15]
 
 <template  v-slot:item.status="{ item }">
 <v-chip small class="white--text" :class="myBtnClass(item.status)">
-{{item.status}}
+  {{(item.status == 'on the way') ? 'Dispatch' : item.status}}
 </v-chip>
 </template>
 
@@ -150,7 +150,7 @@ label="City"
 	
 
     >
-    <v-btn class="primary mx-2 black--text no_print">
+    <v-btn class="primary mx-2 accent--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
@@ -182,7 +182,7 @@ hide-details
 
 <v-dialog v-model="dialog" max-width="1200px">
 <!-- <template v-slot:activator="{ on }">
-<v-btn color="primary" to="order/create" class="black--text mb-2">New Item</v-btn>
+<v-btn color="primary" to="order/create" class="accent--text mb-2">New Item</v-btn>
 </template> -->
 <v-card>
 <!-- <v-card-title>
@@ -196,7 +196,7 @@ hide-details
 <v-row>
 <v-col>
 <v-toolbar
-class="primary mb-2 black--text"
+class="primary mb-2 accent--text"
 dark
 flat
 >
@@ -268,7 +268,7 @@ label="Products"
 <td v-if="!isReadOnly"><v-text-field  type="number"  v-model="order_item_quantity[index]"></v-text-field>
 </td>
 <td v-if="!isReadOnly">
-<v-btn class="primary black--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
+<v-btn class="primary accent--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
 <v-icon>mdi-content-save</v-icon>
 </v-btn>
 
@@ -303,7 +303,7 @@ item-text="name"
 label="Driver"
 ></v-autocomplete>
 </v-col>
-<v-col md="6">
+<v-col md="4">
 <template>
   <v-row>
     <v-col>
@@ -319,6 +319,7 @@ label="Driver"
       >
         <template v-slot:activator="{ on }">
           <v-text-field
+          :rules="Rules"
             dense
             v-model="date"
             label="Payment Due Date"
@@ -346,6 +347,7 @@ label="Driver"
       >
         <template v-slot:activator="{ on }">
           <v-text-field
+          :rules="Rules"
             dense
             v-model="date2"
             label="Delivery Date"
@@ -365,18 +367,22 @@ label="Driver"
 
 </template>
 </v-col>
-<v-simple-table dense>
+<v-simple-table dense style="margin-left:11%; width:30%;">
 <tbody>
 <tr>
-<th style="padding-left:75px; width:60%;">Gross Amount</th>
+<th>Gross Amount</th>
 <td style="border:none;">AED {{ get_decimal_value(editedItem.order_gross) }}</td>
 </tr>    
 <tr>
-<th style="padding-left:75px; width:60%;">Tax (VAT %5)</th>
+<th>Discount Amount</th>
+<td style="border:none;">AED {{ get_decimal_value(editedItem.discounted_price) }}</td>
+</tr>    
+<tr>
+<th>Tax (VAT %5)</th>
 <td style="border:;">AED {{ get_decimal_value(editedItem.order_tax) }}</td>
 </tr>
 <tr>
-<th style="padding-left:75px; width:60%;">Grand Total</th>
+<th>Grand Total</th>
 <th>AED {{get_decimal_value(editedItem.order_total)}}  </th>
 </tr>
 
@@ -387,9 +393,9 @@ label="Driver"
 </v-row>
 <v-row>
 <v-col>
-<v-btn class="primary black--text" text @click="close">Cancel</v-btn>
+<v-btn class="primary accent--text" text @click="close">Cancel</v-btn>
 &nbsp;
-<v-btn v-if="!isReadOnly" class="primary black--text" text @click="save">Save</v-btn>
+<v-btn v-if="!isReadOnly" class="primary accent--text" text @click="save">Save</v-btn>
 </v-col>
 
 </v-row>
@@ -458,8 +464,8 @@ export default {
   },
 
 data: () => ({
-date: new Date().toISOString().substr(0, 10),
-date2: new Date().toISOString().substr(0, 10),
+date: '',
+date2: '',
 menu: false,
 menu2: false,
 product_id:'',    
@@ -665,12 +671,20 @@ this.product_list = fl.data.products;
 },
 
 
-searchIt(){
-this.$axios.get('search_order/'+this.search)
-.then(res => {
-this.orders = res.data.orders;            
-this.data = res.data;
-});
+async   searchIt(){
+
+
+if(this.search){
+let  data = await this.$axios.get('search_order/'+this.search,{params:{
+'per_page':10,
+'sort_by':'desc',
+'order_by':'id'}});
+this.orders.filter((v) => (v.status == 'on the way') ? v.status = 'dispatch' : v.status);
+this.orders = data.data.orders;
+
+
+this.data = data.data;
+}
 },    
 get_stock_info (e) {
 switch(e) {
@@ -849,8 +863,8 @@ if(this.$refs.form.validate()){
 const payload = {
 driver_id : this.editedItem.driver_id,
 order_id : this.editedItem.id,
-// scheduling:this.date2,
-// payment_due_date:this.date,
+scheduling:this.date2,
+payment_due_date:this.date,
 status_id : 2
 };
 

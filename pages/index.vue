@@ -13,7 +13,7 @@
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
+<span><v-icon class="accent--text">mdi-package-variant</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -32,7 +32,7 @@ tile class="primary" size="60">
 
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
+<span><v-icon class="accent--text">mdi-package-variant</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -52,7 +52,7 @@ tile class="primary" size="60">
 
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
+<span><v-icon class="accent--text">mdi-package-variant</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -73,7 +73,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-sale</v-icon></span>
+<span><v-icon class="accent--text">mdi-sale</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -92,7 +92,7 @@ tile class="primary" size="60">
 
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-sale</v-icon></span>
+<span><v-icon class="accent--text">mdi-sale</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -112,7 +112,7 @@ tile class="primary" size="60">
 
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-sale</v-icon></span>
+<span><v-icon class="accent--text">mdi-sale</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -138,7 +138,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text"> mdi-currency-usd </v-icon> </span>
+<span><v-icon class="accent--text"> mdi-currency-usd </v-icon> </span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -157,7 +157,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-nutrition</v-icon></span>
+<span><v-icon class="accent--text">mdi-nutrition</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -178,7 +178,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-account</v-icon></span>
+<span><v-icon class="accent--text">mdi-account</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>
@@ -198,7 +198,7 @@ tile class="primary" size="60">
 </v-list-item-content>
 <v-list-item-avatar
 tile class="primary" size="60">
-<span><v-icon class="black--text">mdi-package-variant</v-icon></span>
+<span><v-icon class="accent--text">mdi-package-variant</v-icon></span>
 </v-list-item-avatar>
 </v-list-item>
 </v-card>

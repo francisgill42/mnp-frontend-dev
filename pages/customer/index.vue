@@ -48,7 +48,7 @@ vertical
 
 <v-dialog v-model="dialog" max-width="1200px">
 <template v-slot:activator="{ on }">
-<v-btn color="primary" to="customer/create" class="black--text mb-2">New Customer</v-btn>
+<v-btn color="primary" to="customer/create" class="accent--text mb-2">New Customer</v-btn>
 </template>
 <v-card>
 
@@ -92,13 +92,13 @@ label="Group"
 
 <v-row>
 <v-col>
-<v-text-field :rules="Rules" v-model="editedItem.phone_number" label="Phone Number"></v-text-field>
+<v-text-field :rules="Rules" min="0" v-model.number="editedItem.phone_number" label="Phone Number"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field :rules="Rules" v-model="editedItem.mobile_number" label="Mobile Number"></v-text-field>
+<v-text-field :rules="Rules" min="0" v-model.number="editedItem.mobile_number" label="Mobile Number"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field :readonly="isReadOnly" :rules="Rules" v-model="editedItem.ntn" label="VAT Number"></v-text-field>
+<v-text-field :readonly="isReadOnly" min="0" v-model.number="editedItem.ntn" label="VAT Number"></v-text-field>
 </v-col>
 </v-row>
 <v-row>
@@ -224,9 +224,9 @@ label="Is Active"
 
   <v-spacer></v-spacer>
 
-  <v-btn class="primary black--text" text @click="close">Cancel</v-btn>
+  <v-btn class="primary accent--text" text @click="close">Cancel</v-btn>
   &nbsp;
-  <v-btn v-if="!isReadOnly" class="primary black--text" text @click="save">Save</v-btn>
+  <v-btn v-if="!isReadOnly" class="primary accent--text" text @click="save">Save</v-btn>
 </v-row>
 
 <v-row v-if="!isReadOnly">
@@ -298,6 +298,11 @@ value: 'id',
 text: 'Contact Person Name',
 align: 'left',
 value: 'contact_person_name',
+},
+{
+text: 'Company Name',
+align: 'left',
+value: 'company_name',
 },
 {
 text: 'Email',
@@ -499,19 +504,16 @@ phone_number:this.editedItem.phone_number,
 mobile_number:this.editedItem.mobile_number,
 address:this.editedItem.address,
 state_id:this.editedItem.state_id,
-cities_by_state_id:(this.editedItem.cities_by_state_id) ? this.editedItem.cities_by_state_id : this.editedItem.city_id,
+cities_id:(this.editedItem.cities_by_state_id) ? this.editedItem.cities_by_state_id : this.editedItem.city_id,
 IsActive:this.editedItem.IsActive ? 1 : 0,
 payment_type:this.editedItem.payment_type,
 delivery_from:this.editedItem.delivery_from,
 delivery_to:this.editedItem.delivery_to,
 };
 
-//console.log(payload);
-
 this.$axios.put('customer/' + this.editedItem.id,payload)
 .then(res => {
 if(res.data.response_status){
-  console.log(res.data.updated_record);
 const index = this.customers.findIndex(item => item.id == this.editedItem.id)
 this.customers.splice(index, 1, res.data.updated_record);
 this.snackbar = res.data.response_status;
@@ -531,7 +533,7 @@ else{
 
 }
 })
-.catch(error => console.log(err));
+.catch(error => console.log(error));
 
 },
 },
