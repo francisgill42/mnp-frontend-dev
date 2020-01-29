@@ -25,15 +25,9 @@ class="elevation-1"
     itemsPerPageOptions:[5,10,15]
 }"
 >
-<template  v-slot:item.status_text="{ item }">
-<v-chip v-if="item.status_id == 1" small class="black--text" :class="myBtnClass(item.status_text)">
-Open
-</v-chip>
-<v-chip v-else-if="item.status_id == 2" small class="black--text" :class="myBtnClass(item.status_text)">
-Scheduled
-</v-chip>
-<v-chip v-else small class="black--text" :class="myBtnClass(item.status_text)">
-Repaired
+<template  v-slot:item.keyword="{ item }">
+<v-chip small class="accent--text" :class="myBtnClass(item.keyword)">
+{{item.keyword | capitalize}}
 </v-chip>
 
 </template>
@@ -223,7 +217,7 @@ value: 'company_name',
 text: 'Status',
 align: 'left',
 sortable: false,
-value: 'status_text',
+value: 'keyword',
 },
 {
 text: 'Scheduled Date',
@@ -250,7 +244,7 @@ v => !!v || 'This field is required',
 statusses: [
     {id:1,status:'Open'},
     {id:2,status:'Scheduled'},
-    {id:3,status:'Repaired'}
+    {id:5,status:'Repaired'}
 ],
 editedIndex: -1,
 editedItem: {
@@ -291,21 +285,21 @@ this.myBtnClass()
 
 },  
 
-
+filters: {
+  capitalize (v) {
+     return v.charAt(0).toUpperCase() + v.slice(1)
+  }
+},
 methods: {
      
 myBtnClass(name) {
   switch(name) {
 
-  case 'pending':
+  case 'open':
       return 'warning darken-3'
-  case 'processing':
-      return 'primary'
-  case 'loaded':
-      return 'teal'
-  case 'on the way':
-      return 'blue lighten-1'
-  case 'delivered':
+  case 'scheduled':
+      return 'green lighten-1'
+  case 'repaired':
       return 'green lighten-1'
   default:
       return 'error'
@@ -319,6 +313,8 @@ async initialize () {
 const requests = await this.$axios.get('maintenanceuser');
 
 this.requests = requests.data;
+
+console.log(requests.data);
 
 // const statusses = await this.$axios.get('status');
 // this.statusses = statusses.data;

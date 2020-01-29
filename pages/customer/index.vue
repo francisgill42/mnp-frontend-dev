@@ -214,6 +214,7 @@ label="Payment Type"
 <v-row v-if="!isReadOnly">
 <v-col>
 <v-checkbox
+color="primary"
 v-model="editedItem.IsActive"
 label="Is Active"
 ></v-checkbox>

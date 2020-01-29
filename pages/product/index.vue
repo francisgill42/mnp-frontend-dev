@@ -48,7 +48,7 @@ vertical
 <v-dialog v-model="dialog" max-width="1000px">
 
 <template v-slot:activator="{ on }">
-<v-btn color="primary"  class="mb-2 black--text" to="/product/create">New Item</v-btn>
+<v-btn class="mb-2 primary accent--text" to="/product/create">New Item</v-btn>
 </template>
 <v-card>
 <!-- <v-card-title>
@@ -121,6 +121,7 @@ vertical
 <v-row v-if="!isReadOnly">
 <v-col>
 <v-checkbox
+color="primary"
 :rules="Rules"
 v-model="editedItem.IsActive"
 label="Is Active"
@@ -130,13 +131,13 @@ label="Is Active"
 <v-row>
   
     <v-col v-if="!isReadOnly">
-    <v-btn raised class="primary black--text" @click="upload_btn">Upload Image</v-btn>  
+    <v-btn raised class="primary accent--text" @click="upload_btn">Upload Image</v-btn>  
     <input required type="file" @change="upload_trigger" style="display:none;" accept="image/*" ref="attachment">
 </v-col>
 <v-spacer></v-spacer>
-<v-btn class="primary black--text mt-4" text @click="close">Cancel</v-btn>
+<v-btn class="primary accent--text mt-4" text @click="close">Cancel</v-btn>
 &nbsp;
-<v-btn v-if="!isReadOnly" class="primary black--text mt-4" text @click="save">Save</v-btn>
+<v-btn v-if="!isReadOnly" class="primary accent--text mt-4" text @click="save">Save</v-btn>
 
 
 </v-row>

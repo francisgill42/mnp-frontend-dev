@@ -22,7 +22,7 @@
 <v-spacer></v-spacer>
 <v-btn
 color="primary"
-class="mr-4 black--text"
+class="mr-4 accent--text"
 @click="save"
 >
 Submit
@@ -80,7 +80,7 @@ label="Product Category"
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
+          <v-date-picker  color="primary accent--text" v-model="date" no-title @input="menu1 = false"></v-date-picker>
         </v-menu>
       </v-col>
 
@@ -103,7 +103,7 @@ label="Unit of Measurement"
 <v-text-field type="number" v-model="unit_in_case" label="Unit in Case"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field type="number" v-model="weight" label="Weight"></v-text-field>
+<v-text-field type="number" v-model="weight" label="Value"></v-text-field>
 </v-col>
 </v-row>
 
@@ -117,6 +117,7 @@ label="Unit of Measurement"
 <v-row>
 <v-col>
 <v-checkbox
+color="primary"
 v-model="IsActive"
 label="Is Active"
 ></v-checkbox>
@@ -125,7 +126,7 @@ label="Is Active"
 
 <v-row>
 <v-col>
-    <v-btn :rules="Rules" class="primary black--text" @click="onPick_soi_attachment">{{(!product_image.name) ? 'Upload Product Image' : product_image.name}}
+    <v-btn :rules="Rules" class="primary accent--text" @click="onPick_soi_attachment">{{(!product_image.name) ? 'Upload Product Image' : product_image.name}}
     <v-icon right dark>mdi-cloud-upload</v-icon></v-btn>   
     <input required type="file" @change="check_soi_attachment" style="display:none;" accept="image/*" ref="soi_attachmentInput">
 

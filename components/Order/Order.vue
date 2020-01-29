@@ -306,7 +306,7 @@ label="Driver"
 <v-col md="4">
 <template>
   <v-row>
-    <v-col>
+    <v-col v-if="!isReadOnly">
       <v-menu
       
         ref="menu"
@@ -316,6 +316,7 @@ label="Driver"
         transition="scale-transition"
         offset-y
         min-width="290px"
+        
       >
         <template v-slot:activator="{ on }">
           <v-text-field
@@ -327,14 +328,14 @@ label="Driver"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" no-title scrollable>
+        <v-date-picker color="primary accent--text" v-model="date" no-title scrollable>
           <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-          <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+          <v-btn text class="primary accent--text" @click="menu = false">Cancel</v-btn>
+          <v-btn text class="primary accent--text" @click="$refs.menu.save(date)">OK</v-btn>
         </v-date-picker>
       </v-menu>
     </v-col>
-   <v-col>
+   <v-col v-if="!isReadOnly">
       <v-menu
       
         ref="menu2"
@@ -343,6 +344,7 @@ label="Driver"
         :return-value.sync="date2"
         transition="scale-transition"
         offset-y
+        
         min-width="290px"
       >
         <template v-slot:activator="{ on }">
@@ -355,10 +357,10 @@ label="Driver"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date2" no-title scrollable>
+        <v-date-picker color="primary accent--text" v-model="date2" no-title scrollable>
           <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="menu2 = false">Cancel</v-btn>
-          <v-btn text color="primary" @click="$refs.menu2.save(date)">OK</v-btn>
+          <v-btn text class="primary accent--text" @click="menu2 = false">Cancel</v-btn>
+          <v-btn text class="primary accent--text"  @click="$refs.menu2.save(date)">OK</v-btn>
         </v-date-picker>
       </v-menu>
     </v-col>
@@ -393,7 +395,7 @@ label="Driver"
 </v-row>
 <v-row>
 <v-col>
-<v-btn class="primary accent--text" text @click="close">Cancel</v-btn>
+<v-btn v-if="!isReadOnly" class="primary accent--text" text @click="close">Cancel</v-btn>
 &nbsp;
 <v-btn v-if="!isReadOnly" class="primary accent--text" text @click="save">Save</v-btn>
 </v-col>
@@ -642,23 +644,6 @@ var all = [];
 
 const fl = await this.$axios.get('filter_listing');    
 
-all = [{id:'',company_name:'All'}];
-fl.data.customers.unshift(all[0]);
-
-all = [{id:'',name:'All'}];
-fl.data.drivers.unshift(all[0]);
-
-
-all = [{id:'',state_name:'All'}];
-fl.data.states.unshift(all[0]);
-
-
-all = [{id:'',city_name:'All'}];
-fl.data.cities.unshift(all[0]);
-
-
-all = [{id:'',product_title:'All'}];
-fl.data.products.unshift(all[0]);
 
 
 this.statusses = fl.data.status;
@@ -679,10 +664,8 @@ let  data = await this.$axios.get('search_order/'+this.search,{params:{
 'per_page':10,
 'sort_by':'desc',
 'order_by':'id'}});
-this.orders.filter((v) => (v.status == 'on the way') ? v.status = 'dispatch' : v.status);
+
 this.orders = data.data.orders;
-
-
 this.data = data.data;
 }
 },    
@@ -794,6 +777,9 @@ this.$axios.get('order?page='+e.page,{params:{
 'product' : this.product_id
 }})
 .then(res => {
+
+
+
 this.orders = res.data.orders;
 this.data = res.data;
 });
