@@ -204,6 +204,14 @@ Filter
 </v-btn>
 </v-col>
 </v-row>
+
+  <v-row class="px-4" style="">
+  <v-col>
+  <v-alert dense class="primary accent--text">
+        Total Records: <strong v-if="orders.length > 0">{{orders.length}}</strong> 
+  </v-alert>
+  </v-col>
+  </v-row>
 <v-toolbar flat>
 
 

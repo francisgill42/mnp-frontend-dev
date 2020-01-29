@@ -14,7 +14,7 @@ itemsPerPageOptions:[10]
 
 
 <template v-slot:top>
-<v-toolbar class="primary title" flat>
+<v-toolbar class="primary accent--text title" flat>
 Orders By States Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
@@ -22,12 +22,12 @@ Orders By States Report
     :labels="{ 
       id:{ title: 'Order ID' },
       order_total:{ title: 'Order Amount' },
-      status:{ title: 'Order Status' },      
+      state_name:{ title: 'State' },      
       created_at:{ title: 'Ordered DateTime' },
       }"    
     >
      
-    <v-btn class="primary mx-2 black--text no_print">
+    <v-btn class="primary mx-2 accent--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
@@ -67,7 +67,7 @@ label="State"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_from" @input="menu_from = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_from" @input="menu_from = false"></v-date-picker>
       </v-menu>
     </v-col>
    <v-col>
@@ -90,7 +90,7 @@ label="State"
           ></v-text-field>
         </template>
         
-        <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
 </v-row>
@@ -98,17 +98,24 @@ label="State"
   
 <v-col>
 
-<v-btn @click="filter_records"  class="black white--text">
+<v-btn @click="filter_records"  class="primary accent--text">
 <v-icon>mdi-filter</v-icon> 
 Filter
 </v-btn>
-<v-btn @click="reset"  class="black--text mx-2">
+<v-btn @click="reset"  class="accent primary--text mx-2">
 <v-icon>mdi-backup-restore</v-icon>&nbsp;Reset
 </v-btn>
-
-
 </v-col>
 </v-row>
+
+  <v-row class="px-4" style="">
+  <v-col>
+  <v-alert dense class="primary accent--text">
+        Total Records: <strong v-if="orders.length > 0">{{orders.length}}</strong> 
+  </v-alert>
+  </v-col>
+  </v-row>
+
 </template>
 <template v-slot:item.order_total="{ item }">
 {{item.order_total | get_decimal_value}}
@@ -161,9 +168,9 @@ sortable:false,
 },
 
 {
-text: 'Status',
+text: 'State',
 align: 'left',
-value: 'status',
+value: 'state_name',
 sortable:false,
 },  
 {
@@ -214,7 +221,8 @@ return 'error'
   reset () {
   this.date_from = '';
   this.date_to = '';
-  this.status_id = '';
+  this.id = '';
+  this.filter_records()
 },
 
   async get_data () {

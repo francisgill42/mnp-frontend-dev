@@ -14,21 +14,21 @@ itemsPerPageOptions:[10]
 
 
 <template v-slot:top>
-<v-toolbar class="primary title" flat>
+<v-toolbar class="primary accent--text title" flat>
 Orders By Driver Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
     :json-data="orders"
     :labels="{ 
       id:{ title: 'Order ID' },
-      name:{ title: 'Driver Name' },
+      driver_name:{ title: 'Driver Name' },
       status:{ title: 'Order Status' },
       order_total:{ title: 'Order Amount' },
       order_confirmed_date:{ title: 'Assigned Date' },
       }"    
     >
      
-    <v-btn class="primary mx-2 black--text no_print">
+    <v-btn class="primary mx-2 accent--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
@@ -68,7 +68,7 @@ label="Drivers"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_from" @input="menu_from = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_from" @input="menu_from = false"></v-date-picker>
       </v-menu>
     </v-col>
    <v-col>
@@ -91,7 +91,7 @@ label="Drivers"
           ></v-text-field>
         </template>
         
-        <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
 </v-row>
@@ -103,13 +103,22 @@ label="Drivers"
 <v-icon>mdi-filter</v-icon> 
 Filter
 </v-btn>
-<v-btn @click="reset"  class="black--text mx-2">
+<v-btn @click="reset"  class="accent primary--text mx-2">
 <v-icon>mdi-backup-restore</v-icon>&nbsp;Reset
 </v-btn>
 
 
 </v-col>
 </v-row>
+
+  <v-row class="px-4" style="">
+  <v-col>
+  <v-alert dense class="primary accent--text">
+        Total Records: <strong v-if="orders.length > 0">{{orders.length}}</strong> 
+  </v-alert>
+
+  </v-col>
+  </v-row>
 </template>
 <template v-slot:item.order_total="{ item }">
 {{item.order_total | get_decimal_value}}
@@ -155,7 +164,7 @@ sortable:false,
 {
 text: 'Driver Name',
 align: 'left',
-value: 'name',
+value: 'driver_name',
 sortable:false,
 },
 
@@ -222,6 +231,7 @@ return 'error'
   this.date_from = '';
   this.date_to = '';
   this.id = '';
+  this.filter_records()
 },
 
   async get_data () {
@@ -254,11 +264,13 @@ this.$axios.get('orders_by_drivers',payload)
 
         var drivers = res.data.map(v => ({
             id:v.id,
-            name:v.driver[0].name,
+            driver_name:v.driver[0].name,
             status:v.status,
             order_total:v.order_total,
             order_confirmed_date:v.order_confirmed_date
         }))
+
+
         this.orders = drivers;
 
 });
