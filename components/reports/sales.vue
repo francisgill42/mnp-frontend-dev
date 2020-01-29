@@ -12,12 +12,12 @@ itemsPerPageOptions:[10]
 }"
 >
 <template v-slot:item.order_total="{ item }">
-{{item.order_total | get_decimal_value}}
+{{item.order_total | get_decimal_value | get_comma_seperator}}
 </template>
 
 
 <template v-slot:top>
-<v-toolbar class="primary title" flat>
+<v-toolbar class="primary title accent--text" flat>
 Sales Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
@@ -52,7 +52,7 @@ Sales Report
 	
 
     >
-    <v-btn class="primary mx-2 black--text no_print">
+    <v-btn class="primary mx-2 no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
@@ -78,7 +78,7 @@ Sales Report
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_from" @input="menu_from = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_from" @input="menu_from = false"></v-date-picker>
       </v-menu>
     </v-col>
    <v-col>
@@ -100,7 +100,7 @@ Sales Report
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
 </v-row>
@@ -108,10 +108,10 @@ Sales Report
   
 <v-col>
 
-<v-btn @click="filter_records"  class="black white--text">
+<v-btn @click="filter_records"  class="primary accent--text">
 <v-icon>mdi-filter</v-icon>Filter
 </v-btn>
-<v-btn @click="reset"  class="black--text mx-2">
+<v-btn @click="reset"  class="accent primary--text mx-2">
 <v-icon>mdi-backup-restore</v-icon>&nbsp;Reset
 </v-btn>
 </v-col>
@@ -119,13 +119,9 @@ Sales Report
 <v-row class="px-4" style="">
   
 <v-col>
-<v-alert
-      dense
-   
-      class="primary"
-    >
-      Total Sale: <strong v-if="total_sale > 0">{{total_sale | get_decimal_value}}</strong> 
-    </v-alert>
+<v-alert dense class="primary accent--text">
+      Total Sale: <strong v-if="total_sale > 0">{{total_sale | get_decimal_value | get_comma_seperator}}</strong> 
+</v-alert>
 
 </v-col>
 </v-row>
@@ -204,13 +200,18 @@ filters: {
   get_decimal_value: function (value) {
     if (!value) return ''
     return (Math.round(value * 100) / 100).toFixed(2);
-  }
+  },
+    get_comma_seperator: function (x) {
+    if (!x) return ''
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
 },
 methods: {
 
 reset () {
   this.date_from = '';
   this.date_to = '';
+  this.filter_records()
 },
 
 filter_records(){

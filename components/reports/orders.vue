@@ -39,7 +39,7 @@ itemsPerPageOptions:[10]
 
 
 <template v-slot:top>
-<v-toolbar class="primary title" flat>
+<v-toolbar class="primary accent--text title" flat>
 Orders Report
 <v-spacer></v-spacer>
    <VueJsonToCsv
@@ -69,7 +69,7 @@ Orders Report
       city_name:{ title: 'city name' },  
       }"    
     >
-    <v-btn class="primary mx-1 black--text no_print">
+    <v-btn class="primary mx-1 accent--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
@@ -146,7 +146,7 @@ label="City"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_from" @input="menu_from = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_from" @input="menu_from = false"></v-date-picker>
       </v-menu>
     </v-col>
    <v-col>
@@ -168,7 +168,7 @@ label="City"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
 </v-row>
@@ -176,8 +176,8 @@ label="City"
 
 <v-radio-group v-model="status_id" row>
 <span>Status</span>&nbsp;&nbsp;
-<v-radio label="All" value=""></v-radio>
-<v-radio  v-for="status in statusses" :key="status.id" :label="status.status | capitalize " :value="status.id"></v-radio>
+<v-radio color="primary accent--text" label="All" value=""></v-radio>
+<v-radio color="primary accent--text"  v-for="status in statusses" :key="status.id" :label="status.status | capitalize " :value="status.id"></v-radio>
 </v-radio-group>
 
 </v-toolbar>       
@@ -185,21 +185,21 @@ label="City"
 
 <v-radio-group v-model="timestamp" row>
 <span>Timestamp</span>&nbsp;&nbsp;
-<v-radio label="All" value=""></v-radio>
-<v-radio label="today" value="today"></v-radio>
-<v-radio label="week" value="week"></v-radio>
-<v-radio label="month" value="month"></v-radio>
-<v-radio label="year" value="year"></v-radio>
+<v-radio color="primary accent--text" label="All" value=""></v-radio>
+<v-radio color="primary accent--text" label="today" value="today"></v-radio>
+<v-radio color="primary accent--text" label="week" value="week"></v-radio>
+<v-radio color="primary accent--text" label="month" value="month"></v-radio>
+<v-radio color="primary accent--text" label="year" value="year"></v-radio>
 </v-radio-group>
 
 </v-toolbar> 
 <v-row class="px-4" style="margin-top:-15px;">
 <v-col>
-<v-btn @click="filter_records"  class="black white--text">
+<v-btn @click="filter_records"  class="primary accent--text">
 <v-icon>mdi-filter</v-icon> 
 Filter
 </v-btn>
-<v-btn @click="reset"  class="black--text mx-2">
+<v-btn @click="reset"  class="accent primary--text mx-2">
 <v-icon>mdi-backup-restore</v-icon>&nbsp;Reset
 </v-btn>
 </v-col>
@@ -210,7 +210,7 @@ Filter
 
 <v-dialog v-model="dialog" max-width="1200px">
 <!-- <template v-slot:activator="{ on }">
-<v-btn color="primary" to="order/create" class="black--text mb-2">New Item</v-btn>
+<v-btn color="primary" to="order/create" class="accent--text mb-2">New Item</v-btn>
 </template> -->
 <v-card>
 <!-- <v-card-title>
@@ -224,7 +224,7 @@ Filter
 <v-row>
 <v-col>
 <v-toolbar
-class="primary mb-2 black--text"
+class="primary mb-2 accent--text"
 dark
 flat
 >
@@ -296,7 +296,7 @@ label="Products"
 <td v-if="!isReadOnly"><v-text-field  type="number"  v-model="order_item_quantity[index]"></v-text-field>
 </td>
 <td v-if="!isReadOnly">
-<v-btn class="primary black--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
+<v-btn class="primary accent--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
 <v-icon>mdi-content-save</v-icon>
 </v-btn>
 
@@ -415,9 +415,9 @@ label="Driver"
 </v-row>
 <v-row>
 <v-col>
-<v-btn class="primary black--text" text @click="close">Cancel</v-btn>
+<v-btn class="primary accent--text" text @click="close">Cancel</v-btn>
 &nbsp;
-<v-btn v-if="!isReadOnly" class="primary black--text" text @click="save">Save</v-btn>
+<v-btn v-if="!isReadOnly" class="primary accent--text" text @click="save">Save</v-btn>
 </v-col>
 
 </v-row>
@@ -661,6 +661,7 @@ this.$axios.get('state/'+this.state_id).then((res) =>{
   this.customer_id = '';
   this.state_id = '';
   this.city_id = '';
+  this.filter_records()
 },
 
 filter_records () {

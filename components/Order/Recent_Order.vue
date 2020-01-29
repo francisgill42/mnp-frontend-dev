@@ -341,10 +341,10 @@ label="Driver"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" no-title scrollable>
+        <v-date-picker color="primary" v-model="date" no-title scrollable>
           <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-          <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+          <v-btn text class="primary accent--text" @click="menu = false">Cancel</v-btn>
+          <v-btn text class="primary accent--text" @click="$refs.menu.save(date)">OK</v-btn>
         </v-date-picker>
       </v-menu>
     </v-col>
@@ -543,7 +543,7 @@ align: 'left',
 value: 'created_at',
 sortable: false
 },
-{ text: 'Actions', value: 'action', sortable: false },
+// { text: 'Actions', value: 'action', sortable: false },
 ],
 emailRules: [
 v => /.+@.+/.test(v) || 'E-mail must be valid',

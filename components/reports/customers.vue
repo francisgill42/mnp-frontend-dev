@@ -14,7 +14,7 @@ itemsPerPageOptions:[10]
 
 
 <template v-slot:top>
-<v-toolbar class="primary title" flat>
+<v-toolbar class="primary accent--text title" flat>
 Orders By Customer Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
@@ -26,13 +26,9 @@ Orders By Customer Report
       order_total:{ title: 'Order Amount' },
       created_at:{ title: 'Ordered DateTime' },
       }"    
-	
-
-
-	
 
     >
-    <v-btn class="primary mx-2 black--text no_print">
+    <v-btn class="primary mx-2 accent--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
@@ -72,7 +68,7 @@ label="Customers"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_from" @input="menu_from = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_from" @input="menu_from = false"></v-date-picker>
       </v-menu>
     </v-col>
    <v-col>
@@ -95,7 +91,7 @@ label="Customers"
           ></v-text-field>
         </template>
         
-        <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
 </v-row>
@@ -103,17 +99,26 @@ label="Customers"
   
 <v-col>
 
-<v-btn @click="filter_records"  class="black white--text">
+<v-btn @click="filter_records"  class="primary accent--text">
 <v-icon>mdi-filter</v-icon> 
 Filter
 </v-btn>
-<v-btn @click="reset"  class="black--text mx-2">
+<v-btn @click="reset"  class="accent primary--text mx-2">
 <v-icon>mdi-backup-restore</v-icon>&nbsp;Reset
 </v-btn>
 
 
 </v-col>
 </v-row>
+  <v-row class="px-4" style="">
+    
+  <v-col>
+  <v-alert dense class="primary accent--text">
+        Total Records: <strong v-if="orders.length > 0">{{orders.length}}</strong> 
+  </v-alert>
+
+  </v-col>
+  </v-row>
 </template>
 <template v-slot:item.order_total="{ item }">
 {{item.order_total | get_decimal_value}}
@@ -199,6 +204,7 @@ methods: {
   this.date_from = '';
   this.date_to = '';
   this.id = '';
+  this.filter_records()
 },
 
   async get_data () {
