@@ -448,7 +448,7 @@ class="error"
 {{get_decimal_value(item.order_total)}}  
 </template>
 
-<template v-slot:item.action="{ item }">
+<!-- <template v-slot:item.action="{ item }">
 <v-icon
 small
 class="mr-2"
@@ -464,15 +464,15 @@ class="mr-2"
 >
 mdi-pencil
 </v-icon>
-<!-- {{item}} -->
+{{item}}
 
-<!-- <v-icon
+<v-icon
 small
 @click="deleteItem(item)"
 >
 mdi-delete
-</v-icon> -->
-</template>
+</v-icon>
+</template> -->
 </v-data-table>
 </v-app>
 </template>
@@ -564,7 +564,7 @@ text: 'Order DateTime',
 align: 'left',
 value: 'created_at',
 },
-{ text: 'Actions', value: 'action', sortable: false },
+// { text: 'Actions', value: 'action', sortable: false },
 ],
 emailRules: [
 v => /.+@.+/.test(v) || 'E-mail must be valid',
