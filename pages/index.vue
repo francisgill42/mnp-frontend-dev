@@ -67,7 +67,7 @@ tile class="primary" size="60">
 <v-list-item four-line >
 <v-list-item-content>
 <div class="overline mb-4">Today's Order Income</div>
-<v-list-item-title color="pink darken-2" class=" headline mb-1">{{daily_orders.orders_amount | get_decimal_value}} </v-list-item-title>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{daily_orders.orders_amount | get_decimal_value | get_comma_seperator}} </v-list-item-title>
 <v-list-item-subtitle>
 </v-list-item-subtitle>
 </v-list-item-content>
@@ -85,7 +85,7 @@ tile class="primary" size="60">
 <v-list-item four-line>
 <v-list-item-content>
 <div class="overline mb-4">Last Week Order Income</div>
-<v-list-item-title color="pink darken-2" class=" headline mb-1">{{weekly_orders.orders_amount | get_decimal_value}}</v-list-item-title>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{weekly_orders.orders_amount | get_decimal_value | get_comma_seperator}}</v-list-item-title>
 <v-list-item-subtitle>
 </v-list-item-subtitle>
 </v-list-item-content>
@@ -105,7 +105,7 @@ tile class="primary" size="60">
 <v-list-item four-line>
 <v-list-item-content>
 <div class="overline mb-4">Last Month Order Income</div>
-<v-list-item-title color="pink darken-2" class=" headline mb-1">{{monthly_orders.orders_amount | get_decimal_value}}</v-list-item-title>
+<v-list-item-title color="pink darken-2" class=" headline mb-1">{{monthly_orders.orders_amount | get_decimal_value | get_comma_seperator}}</v-list-item-title>
 <v-list-item-subtitle>
 </v-list-item-subtitle>
 </v-list-item-content>
@@ -322,7 +322,13 @@ filters: {
   get_decimal_value: function (value) {
     if (!value) return ''
     return (Math.round(value * 100) / 100).toFixed(2);
-  }
+  },
+  get_comma_seperator: function (x) {
+    if (!x) return ''
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  },
+  
+
 },
 methods: {
 
