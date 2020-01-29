@@ -48,7 +48,7 @@ vertical
 
 <v-dialog v-model="dialog" max-width="1200px">
 <template v-slot:activator="{ on }">
-<v-btn color="primary" to="maintenance/create" class="black--text mb-2">Add Maintenance User</v-btn>
+<v-btn color="primary" to="maintenance/create" class="accent--text mb-2">Add Maintenance User</v-btn>
 </template>
 <v-card>
 <!-- <v-card-title>
@@ -62,7 +62,7 @@ vertical
 <v-text-field :readonly="isReadOnly"  v-model="editedItem.pwd" label="Password"></v-text-field>
 </v-col>
 <v-col>
-<v-btn v-if="!isReadOnly" class="primary black--text mt-3" text @click="save">Update Password</v-btn>
+<v-btn v-if="!isReadOnly" class="primary accent--text mt-3" text @click="save">Update Password</v-btn>
 </v-col>
 </v-row> -->
 
@@ -130,6 +130,7 @@ label="City"
 <v-row v-if="!isReadOnly">
 <v-col>
 <v-checkbox
+color="primary"
 v-model="editedItem.IsActive"
 label="Is Active"
 ></v-checkbox>
@@ -140,9 +141,9 @@ label="Is Active"
 
   <v-spacer></v-spacer>
 
-  <v-btn class="primary black--text" text @click="close">Cancel</v-btn>
+  <v-btn class="primary accent--text" text @click="close">Cancel</v-btn>
   &nbsp;
-  <v-btn v-if="!isReadOnly" class="primary black--text" text @click="save">Save</v-btn>
+  <v-btn v-if="!isReadOnly" class="primary accent--text" text @click="save">Save</v-btn>
 </v-row>
 
 <v-row v-if="!isReadOnly">

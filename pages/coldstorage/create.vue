@@ -87,7 +87,7 @@ label="Is Active"
 <v-col>
 <v-btn
 color="primary"
-class="mr-4 black--text"
+class="mr-4 accent--text"
 @click="register"
 >
 Submit

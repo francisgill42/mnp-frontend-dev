@@ -58,7 +58,7 @@ vertical
 
 <v-dialog v-model="dialog" max-width="1200px">
 <!-- <template v-slot:activator="{ on }">
-<v-btn color="primary" to="order/create" class="black--text mb-2">New Item</v-btn>
+<v-btn color="primary" to="order/create" class="accent--text mb-2">New Item</v-btn>
 </template> -->
 <v-card>
 <!-- <v-card-title>
@@ -73,7 +73,7 @@ vertical
 <v-row>
 <v-col>
 <v-toolbar
-class="primary mb-2 black--text"
+class="primary mb-2 accent--text"
 dark
 flat
 >
@@ -134,7 +134,7 @@ label="Statusses"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" no-title scrollable>
+        <v-date-picker color="primary accent--text" v-model="date" no-title scrollable>
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
           <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
@@ -144,9 +144,9 @@ label="Statusses"
     </v-row>
     <v-row>
 <v-col>
-<v-btn class="primary black--text" text @click="close">Cancel</v-btn>
+<v-btn class="primary accent--text" text @click="close">Cancel</v-btn>
 &nbsp;
-<v-btn class="primary black--text" text @click="save">Save</v-btn>
+<v-btn class="primary accent--text" text @click="save">Save</v-btn>
 </v-col>
 
 </v-row>
@@ -353,7 +353,6 @@ const index = this.requests.indexOf(item)
 this.requests.splice(index, 1)
 this.snackbar = res.data.response_status;
 this.response.msg = res.data.message;
-
 }
 });
 },

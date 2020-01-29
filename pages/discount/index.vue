@@ -25,7 +25,7 @@
   <v-col style="margin-left:-15px !important;" sm="6">
   <v-chip
   v-for="(category,index) in item.categories" :key="index"
-  small  class="ma-1 black--text primary">
+  small  class="ma-1 accent--text primary">
   {{category.customer_category_name}}
   </v-chip>
   </v-col>
@@ -56,7 +56,7 @@
         ></v-divider>
        <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary"  class="mb-2 black--text" v-on="on">add discount</v-btn>
+            <v-btn color="primary"  class="mb-2 accent--text" v-on="on">add discount</v-btn>
           </template>
           <v-card>
             <v-card-title>

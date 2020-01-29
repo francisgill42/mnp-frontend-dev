@@ -44,7 +44,7 @@
         ></v-divider>
        <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary"  class="mb-2 black--text" v-on="on">New Item</v-btn>
+            <v-btn color="primary"  class="mb-2 accent--text" v-on="on">New Item</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -73,7 +73,13 @@
                   </v-row>
                   <v-row>
                   <v-col>
-                    <v-text-field v-model="editedItem.reason" label="Reason"></v-text-field>
+                    <v-select
+                    v-model="editedItem.reason"
+                    :items="reasons"
+                    item-value="id"
+                    item-text="reason" 
+                    label="Reason"
+                    ></v-select>
                   </v-col>
                   </v-row>
               </v-container>
@@ -112,6 +118,12 @@
   export default {
 
     data: () => ({
+
+      reasons :[
+        {id:1,reason:'stolen'},
+        {id:2,reason:'misplaced'},
+        {id:3,reason:'damaged'},
+      ],
       search:'',
       snackbar:false,
       dialog: false,
@@ -260,7 +272,6 @@
             this.$axios.post('stock_adjustment',payload)
               .then((res) => {
 
-              console.log(res.data);
                 this.snackbar = true;
 
               if(res.data.response_status){ 

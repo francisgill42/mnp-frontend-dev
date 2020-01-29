@@ -43,7 +43,7 @@
         ></v-divider>
        <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" class="mb-2 black--text" v-on="on">Add Customer Group</v-btn>
+            <v-btn color="primary" class="mb-2 accent--text" v-on="on">Add Customer Group</v-btn>
           </template>
           <v-card>
             <v-card-title>

@@ -73,6 +73,7 @@ label="City"
 <v-row>
 <v-col>
 <v-checkbox
+color="primary"
 v-model="IsActive"
 label="Is Active"
 ></v-checkbox>
@@ -83,7 +84,7 @@ label="Is Active"
 <v-col>
 <v-btn
 color="primary"
-class="mr-4 black--text"
+class="mr-4 accent--text"
 @click="register"
 >
 Submit
