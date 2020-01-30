@@ -129,7 +129,7 @@ label="Statusses"
         <template v-slot:activator="{ on }">
           <v-text-field
             v-model="date"
-            label="Picker in menu"
+            label="Schedule Date"
             readonly
             v-on="on"
           ></v-text-field>

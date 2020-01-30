@@ -538,6 +538,12 @@ value: 'status',
 sortable: false
 },
 {
+text: 'Driver',
+align: 'left',
+sortable: false,
+value: 'driver[0].name',
+},
+{
 text: 'Order DateTime',
 align: 'left',
 value: 'created_at',

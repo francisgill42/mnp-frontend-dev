@@ -14,21 +14,22 @@ itemsPerPageOptions:[10]
 
 
 <template v-slot:top>
-<v-toolbar class="primary title" flat>
-Orders By Status Report 
+<v-toolbar class="primary accent--text title" flat>
+Stock Adjustment Report 
 <v-spacer></v-spacer>
    <VueJsonToCsv
     :json-data="orders"
     :labels="{ 
       id:{ title: 'Order ID' },
-      name:{ title: 'Driver Name' },
-      status:{ title: 'Order Status' },
-      order_total:{ title: 'Order Amount' },
-      order_confirmed_date:{ title: 'Assigned Date' },
+      product_id:{ title: 'Product ID' },
+      product_title:{ title: 'Product Title' },
+      quantity:{ title: 'Quantity' },  
+      reason:{ title: 'Reason' },      
+      created_at:{ title: 'DateTime' },
       }"    
     >
      
-    <v-btn class="primary mx-2 black--text no_print">
+    <v-btn class="primary mx-2 accent--text no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>
     </VueJsonToCsv>
@@ -39,13 +40,25 @@ Orders By Status Report
 <v-row class="px-5"> 
 <v-col>
 <v-select
-v-model="status_id" 
+v-model="id" 
 :items="list"
 item-value="id"
-item-text="status" 
-label="Status"
+item-text="product_title" 
+label="Product"
 ></v-select>
 </v-col>
+</v-row>
+<v-row class="px-5">
+  <v-col>
+<v-radio-group v-model="reason" row>
+<span>Reason</span>&nbsp;&nbsp;
+<v-radio color="primary accent--text" label="All" value=""></v-radio>
+<v-radio color="primary accent--text" label="Stolen" value="stolen"></v-radio>
+<v-radio color="primary accent--text" label="Misplaced" value="misplaced"></v-radio>
+<v-radio color="primary accent--text" label="Damaged" value="damaged"></v-radio>
+</v-radio-group>
+</v-col>
+
 </v-row>
 
 <v-row class="px-4 mt-2">
@@ -68,7 +81,7 @@ label="Status"
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date_from" @input="menu_from = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_from" @input="menu_from = false"></v-date-picker>
       </v-menu>
     </v-col>
    <v-col>
@@ -91,7 +104,7 @@ label="Status"
           ></v-text-field>
         </template>
         
-        <v-date-picker v-model="date_to" @input="menu_to = false"></v-date-picker>
+        <v-date-picker color="primary accent--text" v-model="date_to" @input="menu_to = false"></v-date-picker>
       </v-menu>
     </v-col>
 </v-row>
@@ -99,17 +112,26 @@ label="Status"
   
 <v-col>
 
-<v-btn @click="filter_records"  class="black white--text">
+<v-btn @click="filter_records"  class="primary accent--text">
 <v-icon>mdi-filter</v-icon> 
 Filter
 </v-btn>
-<v-btn @click="reset"  class="black--text mx-2">
+<v-btn @click="reset"  class="accent primary--text mx-2">
 <v-icon>mdi-backup-restore</v-icon>&nbsp;Reset
 </v-btn>
 
 
 </v-col>
 </v-row>
+
+
+  <v-row class="px-4" style="">
+  <v-col>
+  <v-alert dense class="primary accent--text">
+        Total Records: <strong v-if="orders.length > 0">{{orders.length}}</strong> 
+  </v-alert>
+  </v-col>
+  </v-row>
 </template>
 <template v-slot:item.order_total="{ item }">
 {{item.order_total | get_decimal_value}}
@@ -119,6 +141,7 @@ Filter
 <template  v-slot:item.status="{ item }">
 <v-chip small class="white--text" :class="myBtnClass(item.status)">
 {{item.status}}
+
 </v-chip>
 </template>
 
@@ -139,60 +162,50 @@ date_to: '',
 menu_to: false,
 
 id:'',    
-status_id:'',
+reason:'',
 options:{
 sortBy:['id','order_total','created_at'],
 sortDesc:[true]
 },
-
-headers: [
-{
-text: 'Order #',
-align: 'left',
-value: 'id',
-sortable:false,
-},
-
-{
-text: 'Status',
-align: 'left',
-value: 'status',
-sortable:false,
-},
-{
-text: 'Order Amount',
-align: 'left',
-value: 'order_total', 
-sortable:false,
-},
-{
-text: 'Assigned Date',
-align: 'left',
-value: 'order_confirmed_date',
-sortable:false,
-},
-{
-text: 'Shipped Date',
-align: 'left',
-value: 'order_shipped_date',
-sortable:false,
-},
-{
-text: 'Delivered Date',
-align: 'left',
-value: 'order_delivered_date',
-sortable:false,
-},
-
-{
-text: 'Ordered DateTime',
-align: 'left',
-value: 'created_at',
-sortable:false,
-},
-
-
-],
+ headers: [
+        {
+          text: '#',
+          align: 'left',
+          sortable: false,
+          value: 'id',
+        },
+          {
+          text: 'Product ID',
+          align: 'left',
+          sortable: false,
+          value: 'product_id',
+        },  
+         {
+          text: 'Product',
+          align: 'left',
+          sortable: false,
+          value: 'product_title',
+        },        
+         {
+          text: 'Quantity',
+          align: 'left',
+          sortable: false,
+          value: 'quantity',
+        },
+         {
+          text: 'Reason',
+          align: 'left',
+          sortable: false,
+          value: 'reason',
+        },
+         {
+          text: 'Created At',
+          align: 'left',
+          sortable: false,
+          value: 'created_at',
+        },
+        // { text: 'Actions', value: 'action', sortable: false },
+      ],
 
 orders:[],
 list:[],
@@ -232,19 +245,21 @@ return 'error'
   reset () {
   this.date_from = '';
   this.date_to = '';
-  this.status_id = '';
+  this.id = '';
+  this.filter_records()
 },
 
   async get_data () {
         var all = [];
         const fl = await this.$axios.get('filter_listing'); 
 
-        all = [{id:'',status:'All'}];
-        fl.data.status.unshift(all[0]);
-        this.list = fl.data.status;   
+        all = [{id:'',product_title:'All'}];
+        fl.data.products.unshift(all[0]);
+
+        this.list = fl.data.products;   
   },
 
-  filter_records(){
+filter_records(){
 
 const orderBy =  this.options.sortBy.length == 0 ? 'id' : this.options.sortBy[0];
 const sortBy =  this.options.sortDesc.length > 0 || this.options.sortDesc[0]    
@@ -254,37 +269,18 @@ const sortBy =  this.options.sortDesc.length > 0 || this.options.sortDesc[0]
 var payload = {params:{
 'sort_by':sortBy,
 'order_by':orderBy,
-'status' : this.status_id,
+'reason' : this.reason,
+'product' : this.id,
 'from' : this.date_from,
 'to' : this.date_to,
 }};
 
-this.$axios.get('export_orders',payload)
+this.$axios.get('stock_adjustment',payload)
 .then(res => {
-
-    console.log(res.data);
-
-
-        var data = res.data.map(v => ({
-            id:v.id,
-            status:v.status,
-            order_total:v.order_total,
-            order_confirmed_date: v.order_confirmed_date,
-            order_shipped_date: v.order_shipped_date,
-            order_delivered_date: v.order_delivered_date,
-            created_at:v.created_at ,
-
-        }))
-        console.log(data);
-        this.orders = data;
-
+  this.orders = res.data;
 });
 
 },
-
-
-
-
 async paginate () {
   this.filter_records()
 },

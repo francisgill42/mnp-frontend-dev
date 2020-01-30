@@ -39,12 +39,10 @@ export default {
       { id:4, name:'Order By Customer',icon:'mdi-account',link:'customers'},
       { id:5, name:'Order By Driver',icon:'mdi-truck-delivery',link:'drivers'},
       { id:6, name:'Order By Status',icon:'mdi-truck-delivery',link:'statusses'},
-      // { id:7, name:'Order By Calendar',icon:'mdi-calendar',link:'calendars'},
       { id:7, name:'Order By State',icon:'mdi-city',link:'states'},
       { id:8, name:'Order By City',icon:'mdi-city',link:'cities'},
-      // { id:9, name:'Repair',icon:'mdi-format-page-break',link:'repairs'},
-      // { id:11, name:'Stock',icon:'mdi-package-variant-closed',link:'stocks'},
-      // { id:12, name:'Stock Adjustment',icon:'mdi-package-variant',link:'stock_adjustments'}
+      { id:9, name:'Repair',icon:'mdi-format-page-break',link:'repairs'},
+      { id:10, name:'Stock Adjustment',icon:'mdi-package-variant',link:'stock_adjustments'}
       ]
   })
 }
