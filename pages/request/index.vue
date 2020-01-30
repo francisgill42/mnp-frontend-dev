@@ -300,7 +300,7 @@ myBtnClass(name) {
   case 'scheduled':
       return 'green lighten-1'
   case 'repaired':
-      return 'green lighten-1'
+      return 'blue lighten-1'
   default:
       return 'error'
   

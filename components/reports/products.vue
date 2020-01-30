@@ -160,7 +160,7 @@ value: 'order_id',
 sortable:false,
 },
 {
-text: 'Order Total #',
+text: 'Order Total',
 align: 'left',
 value: 'order_total',
 sortable:false,

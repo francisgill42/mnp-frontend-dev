@@ -24,34 +24,11 @@ Sales Report
     :json-data="orders"
     :labels="{ 
       id:{ title: 'order id' },
-      order_total:{ title: 'order total' }, 
-      order_tax:{ title: 'order tax' }, 
-      discounted_price:{ title: 'discounted price' }, 
-      order_gross:{ title: 'order gross' }, 
-      order_confirmed_date:{ title: 'order confirmed date' }, 
-      order_shipped_date:{ title: 'order shipped date' }, 
-      order_delivered_date:{ title: 'order delivered date' },  
-      delivery_date:{ title: 'delivery date' },  
-      payment_due_date:{ title: 'payment due date' },  
-      status:{ title: 'status' },  
-      email	:{ title: 'email' },  
-      phone_number:{ title: 'phone number' },  
-      mobile_number:{ title: 'mobile number' },  
-      ntn:{ title: 'ntn' },  
-      address:{ title: 'address' },  
-      company_name:{ title: 'company name' },  
-      contact_person_name:{ title: 'contact person name' },  
-      payment_type:{ title: 'payment type' },  
-      customer_category_name:{ title: 'customer category name' },
-      state_name:{ title: 'state name' },
-      city_name:{ title: 'city name' },  
-      }"    
-	
-
-
-	
-
-    >
+      company_name:{ title: 'Company Name' },
+      order_delivered_date:{ title: 'Order Delivered Date' }, 
+      order_total:{ title: 'Total Sale' }, 
+      created_at:{title : 'Ordered DateTime'}
+      }">
     <v-btn class="primary mx-2 no_print">
     <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
     </v-btn>

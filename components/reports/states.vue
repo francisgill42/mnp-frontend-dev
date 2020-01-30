@@ -159,13 +159,26 @@ value: 'id',
 sortable:false,
 },
 
-
 {
 text: 'Order Amount',
 align: 'left',
 value: 'order_total', 
 sortable:false,
 },
+
+{
+text: 'Company Name',
+align: 'left',
+value: 'company_name',
+sortable:false,
+},  
+
+{
+text: 'Mobile',
+align: 'left',
+value: 'mobile_number',
+sortable:false,
+},  
 
 {
 text: 'State',
