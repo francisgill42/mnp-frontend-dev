@@ -41,126 +41,6 @@ itemsPerPageOptions:[5,10,15]
 
 <template v-slot:top>
 
-<!-- <v-toolbar class="primary title" flat>
-Filters 
-</v-toolbar> -->
-<!-- <v-row class="px-5"> 
-<v-col>
-<v-select
-v-model="product_id" 
-:items="product_list"
-item-value="id"
-item-text="product_title" 
-label="Products"
-></v-select>
-</v-col>
-<v-col>
-<v-select
-v-model="customer_id" 
-:items="customers"
-item-value="id"
-item-text="company_name" 
-label="Customer"
-></v-select>
-</v-col>
-<v-col>
-<v-select
-v-model="driver_id" 
-:items="drivers"
-item-value="id"
-item-text="name" 
-label="Driver"
-></v-select>
-</v-col>
-<v-col>
-<v-select
-@change="get_cities_by_id"
-v-model="state_id" 
-:items="states"
-item-value="id"
-item-text="state_name" 
-label="State"
-></v-select>
-</v-col>
-
-<v-col>
-<v-select
-v-model="city_id" 
-:items="cities"
-item-value="id"
-item-text="city_name" 
-label="City"
-></v-select>
-</v-col>
-</v-row> -->
-
-
-<!-- <v-toolbar style="margin-top:-10px;" flat>
-
-<v-radio-group v-model="status_id" row>
-<span>Status</span>&nbsp;&nbsp;
-<v-radio label="All" value=""></v-radio>
-<v-radio v-for="status in statusses" :key="status.id" :label="status.status" :value="status.id"></v-radio>
-</v-radio-group>
-
-</v-toolbar>       
-<v-toolbar style="margin-top:-15px;" flat>
-
-<v-radio-group v-model="timestamp" row>
-<span>Timestamp</span>&nbsp;&nbsp;
-<v-radio label="All" value=""></v-radio>
-<v-radio label="today" value="today"></v-radio>
-<v-radio label="week" value="week"></v-radio>
-<v-radio label="month" value="month"></v-radio>
-<v-radio label="year" value="year"></v-radio>
-</v-radio-group>
-
-</v-toolbar>  -->
-<!-- <v-row class="px-4" style="margin-top:-15px;">
-<v-col>
-   <VueJsonToCsv
-    :json-data="orders"
-    :labels="{ 
-      id:{ title: 'order id' },
-      order_total:{ title: 'order total' }, 
-      order_tax:{ title: 'order tax' }, 
-      discounted_price:{ title: 'discounted price' }, 
-      order_gross:{ title: 'order gross' }, 
-      order_confirmed_date:{ title: 'order confirmed date' }, 
-      order_shipped_date:{ title: 'order shipped date' }, 
-      order_delivered_date:{ title: 'order delivered date' },  
-      delivery_date:{ title: 'delivery date' },  
-      payment_due_date:{ title: 'payment due date' },  
-      status:{ title: 'status' },  
-      email	:{ title: 'email' },  
-      phone_number:{ title: 'phone number' },  
-      mobile_number:{ title: 'mobile number' },  
-      ntn:{ title: 'ntn' },  
-      address:{ title: 'address' },  
-      company_name:{ title: 'company name' },  
-      contact_person_name:{ title: 'contact person name' },  
-      payment_type:{ title: 'payment type' },  
-      customer_category_name:{ title: 'customer category name' },
-      state_name:{ title: 'state name' },
-      city_name:{ title: 'city name' },  
-      }"    
-	
-
-
-	
-
-    >
-    <v-btn class="primary mx-2 accent--text no_print">
-    <v-icon>mdi-file-export</v-icon><b>&nbsp;Export CSV </b>
-    </v-btn>
-    </VueJsonToCsv>
-<v-btn @click="filter_records"  class="black white--text">
-<v-icon>mdi-filter</v-icon> 
-Filter
-</v-btn>
-
-</v-col>
-</v-row> -->
 <v-toolbar flat>
 <v-toolbar-title dark>Orders</v-toolbar-title>
 <v-divider
@@ -181,15 +61,8 @@ hide-details
 
 
 <v-dialog v-model="dialog" max-width="1200px">
-<!-- <template v-slot:activator="{ on }">
-<v-btn color="primary" to="order/create" class="accent--text mb-2">New Item</v-btn>
-</template> -->
+
 <v-card>
-<!-- <v-card-title>
-
-<span class="headline">{{ formTitle }}</span> -->
-
-
 <v-card-text>
 
 <v-container>
@@ -360,7 +233,7 @@ label="Driver"
         <v-date-picker color="primary accent--text" v-model="date2" no-title scrollable>
           <v-spacer></v-spacer>
           <v-btn text class="primary accent--text" @click="menu2 = false">Cancel</v-btn>
-          <v-btn text class="primary accent--text"  @click="$refs.menu2.save(date)">OK</v-btn>
+          <v-btn text class="primary accent--text"  @click="$refs.menu2.save(date2)">OK</v-btn>
         </v-date-picker>
       </v-menu>
     </v-col>
@@ -415,15 +288,6 @@ label="Driver"
 
 </v-toolbar>
 </template>
-<template v-slot:item.indicator="{ item }">
-
-<!-- <v-icon small  v-if="item.order_status_id == 1 && 
-(item.products[0].stock == 0 || 
-item.products[0].stock == 'Stock does not exist')" 
-class="error"
->mdi-checkbox-blank-circle</v-icon> -->
-
-</template>
 <template v-slot:item.order_total="{ item }">
 {{get_decimal_value(item.order_total)}}  
 </template>
@@ -444,14 +308,7 @@ class="mr-2"
 >
 mdi-pencil
 </v-icon>
-<!-- {{item}} -->
 
-<!-- <v-icon
-small
-@click="deleteItem(item)"
->
-mdi-delete
-</v-icon> -->
 </template>
 
 </v-data-table>
