@@ -5,6 +5,7 @@
 <v-snackbar
 v-model="snackbar"
 :top="'top'"
+:color="color"
 >
 {{response.msg}}
 <v-btn      
@@ -104,20 +105,18 @@ flat
 
 <tr v-for="(item,index) in editedItem.products" :key="index">
 
-<td>{{ item.id }}</td>
+<td>{{ item.order_item_id }}</td>
 <td>{{ item.legacy_code_sku }}</td>
 <td>{{ item.product_title }}</td>
-<td height="25" width="15%"><img style="padding-top:5px;" width="30%" :src="item.product_image" alt="Orange Room Digital"/></td>
+<td height="25" width="15%"><img style="padding-top:5px;" width="30%" :src="item.product_image" alt=""/></td>
 <td width="14%" class="text-center">{{ item.product_quantity }} 
-<span 
 
-:class="get_stock_info(item.stock).class"
->
+<span :class="get_stock_info(item.stock).class">
+  
 {{get_stock_info(item.stock).text}}
-{{item.stock > 0 ? '(' + item.stock + ')' : '' }} 
-
+{{item.stock > 0 ? '(' + item.stock + ')' : '' }}
 </span>  
-<!-- v-if="editedItem.order_status_id == 1"  -->
+
 </td>
 
 <td>AED {{ item.product_price }}</td>
@@ -130,7 +129,6 @@ flat
 <v-select
 class="mb-2"
 v-model="order_item.id[index]"
-
 :items="order_items"
 item-value="id"
 item-text="product_title" 
@@ -138,7 +136,7 @@ label="Products"
 ></v-select>
 
 </td>
-<td v-if="!isReadOnly"><v-text-field  type="number"  v-model="order_item_quantity[index]"></v-text-field>
+<td v-if="!isReadOnly"><v-text-field type="number"  v-model="order_item_quantity[index]"></v-text-field>
 </td>
 <td v-if="!isReadOnly">
 <v-btn class="primary accent--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
@@ -441,9 +439,7 @@ statusses:[],
 data:[],
 
 change_product:[],
-
-
-
+color:'',
 }),
 
 computed: {
@@ -573,12 +569,19 @@ order_item_id : order_item_id,
 product_id : this.order_item.id[i],
 item_quantity : this.order_item_quantity[i]
 };
-//console.log(payload)
+
+if(!payload.product_id || !payload.item_quantity[i]){
+this.snackbar = true;
+this.color = 'red';
+this.response.msg = 'Action Required';
+
+}
+else{
+
 
 this.$axios.post('change_order_item',payload)
 .then(res =>{
 
-console.log(res.data);
 
 this.editedItem.order_gross = this.get_decimal_value(res.data.updated_record.order_gross)
 this.editedItem.order_tax = this.get_decimal_value(res.data.updated_record.order_tax)
@@ -591,7 +594,7 @@ this.order_item.id[i] = ''
 this.order_item_quantity[i] = ''
 
 }).catch(error => console.log(error));
-
+}
 },
 
 sum_of_product_price (a,b) {
@@ -652,19 +655,24 @@ this.data = res.data;
 },
 async initialize () {
 
-
-
-
 const drivers = await this.$axios.get('driver');
 this.drivers = drivers.data;
 
-const order_items = await this.$axios.get('product');
-this.order_items = order_items.data;
-
-
 },
 
-editItem (item) {
+async editItem (item) {
+
+  
+  const order_items = await this.$axios.get('product');
+      
+      order_items.data.filter(v => {
+        
+        let arr1 = item.products.map(v => v.id);
+
+        if(!arr1.includes(v.id)){
+          this.order_items.push(v);
+        }
+      });
 
 this.editedIndex = this.orders.indexOf(item)
 this.editedItem = Object.assign({}, item)
@@ -703,11 +711,21 @@ this.editedIndex = -1
 },
 
 save () {
-
-// const stock_check = this.editedItem.products.filter((v => v.stock == 0 || v.stock == 'Stock does not exist'));
-//       stock_check ? true : false
-//if(this.$refs.form.validate() && stock_check == false){
 if(this.$refs.form.validate()){
+
+
+const error = this.editedItem.products.filter((v) => {
+            return v.stock == 0 || v.stock == 'Stock does not exist' || v.product_quantity > v.stock
+  });
+
+if(error.length > 0){
+  this.snackbar = true;
+  this.color = 'red';
+  this.response.msg = 'Kindly adjust your stock';
+}
+
+else{
+
 
 const payload = {
 driver_id : this.editedItem.driver_id,
@@ -720,7 +738,8 @@ status_id : 2
 this.$axios.post('status_change',payload)
 .then(res => {
 
-this.orders[this.editedIndex].status = res.data.updated_record.status
+this.filter_records();
+//this.orders[this.editedIndex].status = res.data.updated_record.status
 
 this.snackbar = res.data.response_status;
 this.response.msg = res.data.message;
@@ -729,26 +748,15 @@ this.close()
 })
 .catch(error => console.log(error));
 }
-else{
-this.snackbar = true;
-this.response.msg = 'Kindly adjust your stock';
 }
+
+
 },
 },
 }
 </script>
 <style>
-/* i.v-icon.notranslate.mdi.mdi-radiobox-blank.theme--light{
-color:white;
-} */
-/* label.v-label.theme--light {
-color:white;
-} */
-.indicator{
-margin-left: -24%; padding:0;
-background: red !important;
-width: 3px;
-}
+
 .stock_does_not_exist{
 font-size: 11px;
 display: block;
