@@ -74,7 +74,7 @@ label="Products"
 </v-form>
 <v-card-actions>
 <v-spacer></v-spacer>
-<v-btn color="blue darken-1" text @click="save">Save</v-btn>
+<v-btn v-if="inputs.length"  class="primary darken-1" text @click="save">Save</v-btn>
 </v-card-actions>
   
 </v-container>
