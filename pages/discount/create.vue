@@ -57,9 +57,8 @@ item-text="product_title"
 label="Products"
 ></v-select>
 </v-col>
-
 <v-col>
-<v-text-field :rules="Rules"  type="number" min="0" v-model.number="input.amount" label="Discount Amount"></v-text-field>
+<v-text-field :rules="amountRules" type="number" v-model.number="input.amount" label="Discount Amount"></v-text-field>
 </v-col>
 <v-col cols="1">
 <v-icon class="py-5 px-5 red--text"   @click="deleteRow(index)">mdi-delete</v-icon>
@@ -111,6 +110,10 @@ msg:'',
 snackbar:false,
 Rules : [
 v => !!v || 'This field is required',
+],
+
+amountRules : [
+ v => (v > 0 && v <= 70) || 'Amount should be in range of 1 to 70',
 ],
 
 }),
