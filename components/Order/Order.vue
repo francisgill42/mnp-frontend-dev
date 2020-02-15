@@ -623,13 +623,14 @@ status_id : 2
 this.$axios.post('status_change',payload)
 .then(res => {
 this.color = '';
-console.log(res.data);
 //this.orders[this.editedIndex].status = res.data.updated_record.status
 
 this.color = '';
 this.snackbar = res.data.response_status;
 this.response.msg = res.data.message;
 this.close()
+
+setTimeout(() => location.reload(),500);
 
 })
 .catch(error => console.log(error));
