@@ -28,7 +28,7 @@ class="elevation-1"
 @pagination="paginate"
 :items-per-page=10
 :footer-props="{
-itemsPerPageOptions:[5,10,15]
+itemsPerPageOptions:[10]
 }"
 >
 
@@ -74,6 +74,9 @@ class="primary mb-2 accent--text"
 dark
 flat
 >
+
+<v-toolbar-title>Order # {{editedItem.id}}</v-toolbar-title>
+<v-spacer></v-spacer>
 <v-toolbar-title>{{ editedItem.company_name }}</v-toolbar-title>
 </v-toolbar>
 </v-col>
@@ -104,7 +107,6 @@ flat
 <tbody>
 
 <tr v-for="(item,index) in editedItem.products" :key="index">
-
 <td>{{ item.order_item_id }}</td>
 <td>{{ item.legacy_code_sku }}</td>
 <td>{{ item.product_title }}</td>
@@ -116,16 +118,10 @@ flat
 {{get_stock_info(item.stock).text}}
 {{item.stock > 0 ? '(' + item.stock + ')' : '' }}
 </span>  
-
 </td>
-
 <td>AED {{ item.product_price }}</td>
-<!-- <td>AED {{ item.product_quantity * item.product_price }}</td> -->
-
 <td>AED {{sum_of_product_price(item.product_quantity , item.product_price)}}</td>
-
 <td v-if="!isReadOnly">
-
 <v-select
 class="mb-2"
 v-model="order_item.id[index]"
@@ -134,21 +130,18 @@ item-value="id"
 item-text="product_title" 
 label="Products"
 ></v-select>
-
-</td>
-<td v-if="!isReadOnly"><v-text-field type="number"  v-model="order_item_quantity[index]"></v-text-field>
 </td>
 <td v-if="!isReadOnly">
-<v-btn class="primary accent--text" @click="get_product(index,item.order_item_id)" fab x-small dark>
-<v-icon>mdi-content-save</v-icon>
-</v-btn>
-
+  <v-text-field type="number" v-model="order_item_quantity[index]"></v-text-field>
+ 
 </td>
+<td v-if="!isReadOnly">
+<v-btn class="primary accent--text" @click="get_product(index,item.order_item_id,item.id)" fab x-small dark>
+<v-icon>mdi-content-save</v-icon>
 
+</v-btn>
+</td>
 </tr>
-
-
-
 </tbody>
 
 </template>
@@ -244,19 +237,19 @@ label="Driver"
 <tbody>
 <tr>
 <th>Gross Amount</th>
-<td style="border:none;">AED {{ get_decimal_value(editedItem.order_gross) }}</td>
+<td style="border:none;">AED {{ editedItem.order_gross | get_decimal_value }}</td>
 </tr>    
 <tr>
 <th>Discount Amount</th>
-<td style="border:none;">AED {{ get_decimal_value(editedItem.discounted_price) }}</td>
+<td style="border:none;">AED {{ editedItem.discounted_price | get_decimal_value  }}</td>
 </tr>    
 <tr>
 <th>Tax (VAT %5)</th>
-<td style="border:;">AED {{ get_decimal_value(editedItem.order_tax) }}</td>
+<td style="border:;">AED {{ editedItem.order_tax | get_decimal_value }}</td>
 </tr>
 <tr>
 <th>Grand Total</th>
-<th>AED {{get_decimal_value(editedItem.order_total)}}  </th>
+<th>AED {{editedItem.order_total | get_decimal_value}}  </th>
 </tr>
 
 
@@ -287,7 +280,7 @@ label="Driver"
 </v-toolbar>
 </template>
 <template v-slot:item.order_total="{ item }">
-{{get_decimal_value(item.order_total)}}  
+{{ item.order_total | get_decimal_value}}  
 </template>
 
 <template v-slot:item.action="{ item }">
@@ -298,15 +291,9 @@ class="mr-2"
 >
 mdi-eye
 </v-icon>
-<v-icon
-v-if="item.order_status_id == 1 || item.order_status_id == 2"
-small
-class="mr-2"
-@click="editItem(item)"
->
+<v-icon small class="mr-2" v-if="item.order_status_id == 1 || item.order_status_id == 2" @click="editItem(item)">
 mdi-pencil
 </v-icon>
-
 </template>
 
 </v-data-table>
@@ -328,10 +315,7 @@ menu2: false,
 product_id:'',    
 timestamp:'',
 status_id:'',
-customer_id:'',
 driver_id:'',
-state_id:'',
-city_id:'',
 
 order_item:{
 id:[]
@@ -403,9 +387,7 @@ value: 'created_at',
 },
 { text: 'Actions', value: 'action', sortable: false },
 ],
-emailRules: [
-v => /.+@.+/.test(v) || 'E-mail must be valid',
-],
+
 msg:"",
 product_list:[],
 snackbar:false,
@@ -447,9 +429,6 @@ computed: {
 isReadOnly(){
 return this.action == 'View Item'
 },
-formTitle () {
-return (this.action) ? this.action :this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-},
 
 },
 
@@ -462,60 +441,21 @@ val || this.close()
 created () {
 this.initialize()
 this.myBtnClass()
-this.get_data()
+
 },  
 
 
+filters: {
+
+  get_decimal_value (value) {
+  return (Math.round(value * 100) / 100).toFixed(2);
+  },
+
+},
+
 methods: {
-get_cities_by_id(){
-var arr = [];
-this.$axios.get('state/'+this.state_id).then((res) =>{
-res.data.map(r => arr.push( {id:r.c_id,city_name:r.c_name} ));
-this.cities = arr;
-});
-},
 
-filter_records () {
-
-this.$axios.get('order',{params:{
-'per_page':10,
-'sort_by':'desc',
-'order_by':'id',
-'timestamp' : this.timestamp ,
-'driver' : this.driver_id,
-'status' : this.status_id,
-'customer' : this.customer_id,
-'state' : this.state_id,
-'city' : this.city_id,
-'product' : this.product_id
-}})
-.then(res => {
-this.orders = res.data.orders;
-this.data = res.data;
-});
-
-},
-
-
-async get_data () {
-var all = [];
-
-
-const fl = await this.$axios.get('filter_listing');    
-
-
-
-this.statusses = fl.data.status;
-this.customers = fl.data.customers;
-this.drivers = fl.data.drivers;
-this.states = fl.data.states;
-this.cities = fl.data.cities;
-this.product_list = fl.data.products;
-
-},
-
-
-async   searchIt(){
+async searchIt(){
 
 
 if(this.search){
@@ -560,17 +500,16 @@ return 'error'
 }, 
 
 
-get_product (i,order_item_id) {
-
+get_product (i,order_item_id,p_id) {
 
 var payload = {
 order_id : this.editedItem.id,
 order_item_id : order_item_id,
-product_id : this.order_item.id[i],
+product_id : this.order_item.id[i] || p_id ,
 item_quantity : this.order_item_quantity[i]
 };
 
-if(!payload.product_id || !payload.item_quantity[i]){
+if(!payload.item_quantity){
 this.snackbar = true;
 this.color = 'red';
 this.response.msg = 'Action Required';
@@ -582,98 +521,76 @@ else{
 this.$axios.post('change_order_item',payload)
 .then(res =>{
 
-
-this.editedItem.order_gross = this.get_decimal_value(res.data.updated_record.order_gross)
-this.editedItem.order_tax = this.get_decimal_value(res.data.updated_record.order_tax)
-this.editedItem.order_total = this.orders[this.editedIndex].order_total = this.get_decimal_value(res.data.updated_record.order_total)
-Object.assign(this.editedItem.products[i],res.data.updated_record.products)
-
 this.snackbar = res.data.response_status;
 this.response.msg = res.data.message;
-this.order_item.id[i] = ''
-this.order_item_quantity[i] = ''
 
+
+this.editedItem.order_gross = res.data.updated_record.order_gross
+this.editedItem.order_tax =   res.data.updated_record.order_tax
+this.editedItem.order_total = this.orders[this.editedIndex].order_total = res.data.updated_record.order_total
+Object.assign(this.editedItem.products[i],res.data.updated_record.products)
+
+
+    // let arr1 = item.products.map(v => v.id);
+
+    // const order_items = await this.$axios.get('product');
+
+    // order_items.data.filter(v => {
+
+    // if(!arr1.includes(v.id)){
+    // this.order_items.push(v);
+    // }
+    // });
+
+// this.order_items = [];
+// this.order_item.id = []
+  location.reload();
 }).catch(error => console.log(error));
 }
 },
 
-sum_of_product_price (a,b) {
-return this.get_decimal_value(a * b)    
-},
-get_decimal_value (value) {
-return (Math.round(value * 100) / 100).toFixed(2);
-},
 
 
 async paginate (e) {
 
-const orderBy =  this.options.sortBy.length == 0 ? 'id' : this.options.sortBy[0];
-const sortBy =  this.options.sortDesc.length > 0 || this.options.sortDesc[0]    
-? 'desc' : 'asc';
+  const orderBy =  this.options.sortBy.length == 0 ? 'id' : this.options.sortBy[0];
+  const sortBy =  this.options.sortDesc.length > 0 || this.options.sortDesc[0]    
+  ? 'desc' : 'asc';
 
-var filter = '';
-if(this.product_id == '' && 
-this.timestamp == ''  &&
-this.status_id == ''  &&
-this.customer_id == ''&& 
-this.driver_id == ''  &&
-this.state_id == ''   &&
-this.city_id == '')
-{
 
-let  data = await this.$axios.get('order?page='+e.page,{params:{
-'per_page':e.itemsPerPage,
-'sort_by':sortBy,
-'order_by':orderBy}});
-this.orders = data.data.orders;
-this.data = data.data;
-
-}
-else{
 this.$axios.get('order?page='+e.page,{params:{
 'per_page':e.itemsPerPage,
 'sort_by':sortBy,
 'order_by':orderBy,
-'timestamp' : this.timestamp ,
+'timestamp' : this.timestamp,
 'driver' : this.driver_id,
 'status' : this.status_id,
-'customer' : this.customer_id,
-'state' : this.state_id,
-'city' : this.city_id,
 'product' : this.product_id
-}})
-.then(res => {
-
-
-
-this.orders = res.data.orders;
-this.data = res.data;
+}}).then(res => {
+    this.orders = res.data.orders;
+    this.data = res.data;
 });
-}
 
 
 },
 async initialize () {
-
-const drivers = await this.$axios.get('driver');
-this.drivers = drivers.data;
-
+  const drivers = await this.$axios.get('driver');
+  this.drivers = drivers.data;
 },
 
 async editItem (item) {
 
-  
+
+  let arr1 = item.products.map(v => v.id);
+
   const order_items = await this.$axios.get('product');
       
-      order_items.data.filter(v => {
+    order_items.data.filter(v => {
         
-        let arr1 = item.products.map(v => v.id);
-
         if(!arr1.includes(v.id)){
           this.order_items.push(v);
         }
-      });
-
+  });
 this.editedIndex = this.orders.indexOf(item)
 this.editedItem = Object.assign({}, item)
 this.dialog = true
@@ -687,24 +604,11 @@ this.dialog = true
 this.action = 'View Item';
 },
 
-
-deleteItem (item) {
-confirm('Are you sure you want to delete this item?') &&
-this.$axios.delete('order/'+item.id)
-.then((res) => {
-if(res.data.response_status){
-const index = this.orders.indexOf(item)
-this.orders.splice(index, 1)
-this.snackbar = res.data.response_status;
-this.response.msg = res.data.message;
-
-}
-});
-},
-
 close () {
+
 this.dialog = false
 setTimeout(() => {
+this.order_items = [];    
 this.editedItem = Object.assign({}, this.defaultItem)
 this.editedIndex = -1
 }, 300)
@@ -716,7 +620,7 @@ if(this.$refs.form.validate()){
 
 const error = this.editedItem.products.filter((v) => {
             return v.stock == 0 || v.stock == 'Stock does not exist' || v.product_quantity > v.stock
-  });
+});
 
 if(error.length > 0){
   this.snackbar = true;
@@ -737,10 +641,11 @@ status_id : 2
 
 this.$axios.post('status_change',payload)
 .then(res => {
-
+this.color = '';
 this.filter_records();
 //this.orders[this.editedIndex].status = res.data.updated_record.status
 
+this.color = '';
 this.snackbar = res.data.response_status;
 this.response.msg = res.data.message;
 this.close()
@@ -752,10 +657,15 @@ this.close()
 
 
 },
+
+sum_of_product_price (a,b) {
+return (Math.round((a * b) * 100) / 100).toFixed(2)
+},
+
 },
 }
 </script>
-<style>
+<style scoped>
 
 .stock_does_not_exist{
 font-size: 11px;
