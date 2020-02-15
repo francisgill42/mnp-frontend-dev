@@ -500,7 +500,7 @@ return 'error'
 }, 
 
 
-get_product (i,order_item_id,p_id) {
+async get_product (i,order_item_id,p_id) {
 
 var payload = {
 order_id : this.editedItem.id,
@@ -518,34 +518,21 @@ this.response.msg = 'Action Required';
 else{
 
 
-this.$axios.post('change_order_item',payload)
+await this.$axios.post('change_order_item',payload)
 .then(res =>{
 
 this.snackbar = res.data.response_status;
 this.response.msg = res.data.message;
-
-
 this.editedItem.order_gross = res.data.updated_record.order_gross
 this.editedItem.order_tax =   res.data.updated_record.order_tax
 this.editedItem.order_total = this.orders[this.editedIndex].order_total = res.data.updated_record.order_total
 Object.assign(this.editedItem.products[i],res.data.updated_record.products)
 
-
-    // let arr1 = item.products.map(v => v.id);
-
-    // const order_items = await this.$axios.get('product');
-
-    // order_items.data.filter(v => {
-
-    // if(!arr1.includes(v.id)){
-    // this.order_items.push(v);
-    // }
-    // });
-
-// this.order_items = [];
-// this.order_item.id = []
-  location.reload();
-}).catch(error => console.log(error));
+this.order_item.id = []
+this.order_items = [];
+this.filtered_products(this.editedItem);
+})
+.catch(error => console.log(error));
 }
 },
 
@@ -578,19 +565,11 @@ async initialize () {
   this.drivers = drivers.data;
 },
 
-async editItem (item) {
+editItem (item) {
+
+this.filtered_products(item);
 
 
-  let arr1 = item.products.map(v => v.id);
-
-  const order_items = await this.$axios.get('product');
-      
-    order_items.data.filter(v => {
-        
-        if(!arr1.includes(v.id)){
-          this.order_items.push(v);
-        }
-  });
 this.editedIndex = this.orders.indexOf(item)
 this.editedItem = Object.assign({}, item)
 this.dialog = true
@@ -610,6 +589,7 @@ this.dialog = false
 setTimeout(() => {
 this.order_items = [];    
 this.editedItem = Object.assign({}, this.defaultItem)
+this.order_item.id = [];
 this.editedIndex = -1
 }, 300)
 },
@@ -657,7 +637,19 @@ this.close()
 
 
 },
+filtered_products(item){
 
+this.$axios.get('product').then((res) => {
+
+  res.data.filter(v => {
+
+  if(!item.products.map(v => v.id).includes(v.id)){
+    this.order_items.push(v);
+  }
+  });
+
+  }).catch(error => console.log(error));
+},
 sum_of_product_price (a,b) {
 return (Math.round((a * b) * 100) / 100).toFixed(2)
 },
