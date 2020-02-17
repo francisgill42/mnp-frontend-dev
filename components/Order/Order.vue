@@ -583,7 +583,6 @@ this.editedItem = Object.assign({}, item)
 this.dialog = true
 this.action = 'View Item';
 },
-
 close () {
 
 this.dialog = false
@@ -597,11 +596,9 @@ this.editedIndex = -1
 
 save () {
 if(this.$refs.form.validate()){
-
-
-const error = this.editedItem.products.filter((v) => {
-            return v.stock == 0 || v.stock == 'Stock does not exist' || v.product_quantity > v.stock
-});
+  const error = this.editedItem.products.filter((v) => {
+              return v.stock == 0 || v.stock == 'Stock does not exist' || v.product_quantity > v.stock
+  });
 
 if(error.length > 0){
   this.snackbar = true;
@@ -622,16 +619,12 @@ status_id : 2
 
 this.$axios.post('status_change',payload)
 .then(res => {
-this.color = '';
-//this.orders[this.editedIndex].status = res.data.updated_record.status
-
-this.color = '';
-this.snackbar = res.data.response_status;
-this.response.msg = res.data.message;
-this.close()
-
-setTimeout(() => location.reload(),500);
-
+  this.color = '';
+  this.snackbar = res.data.response_status;
+  this.response.msg = res.data.message;
+  Object.assign(this.editedItem,res.data.updated_record)
+  this.close()
+  setTimeout(() => this.close() ,1000);
 })
 .catch(error => console.log(error));
 }
