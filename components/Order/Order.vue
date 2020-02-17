@@ -595,6 +595,8 @@ this.editedIndex = -1
 },
 
 save () {
+
+
 if(this.$refs.form.validate()){
   const error = this.editedItem.products.filter((v) => {
               return v.stock == 0 || v.stock == 'Stock does not exist' || v.product_quantity > v.stock
@@ -619,11 +621,14 @@ status_id : 2
 
 this.$axios.post('status_change',payload)
 .then(res => {
+ 
   this.color = '';
   this.snackbar = res.data.response_status;
   this.response.msg = res.data.message;
-  Object.assign(this.editedItem,res.data.updated_record)
-  this.close()
+
+  
+  this.editedItem.products = res.data.updated_record.products;
+  Object.assign(this.orders[this.editedIndex] , res.data.updated_record);
   setTimeout(() => this.close() ,1000);
 })
 .catch(error => console.log(error));
