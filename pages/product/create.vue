@@ -32,14 +32,30 @@ Submit
 <v-card-text>
 <v-container>
 
-
-
 <v-row>
 <v-col>
 <v-text-field :rules="Rules" v-model="product_title" label="Product Title"></v-text-field>
 </v-col>
 <v-col>
 <v-text-field :rules="Rules" v-model="legacy_code_sku" label="SKU CODE"></v-text-field>
+</v-col>
+</v-row>
+
+<v-row>
+<v-col>
+<v-text-field :rules="Rules" v-model="group_code" label="Group Code"></v-text-field>
+</v-col>
+<v-col>
+<v-text-field v-model="group_description" label="Group Description"></v-text-field>
+</v-col>
+</v-row>
+
+<v-row>
+<v-col>
+<v-text-field :rules="Rules" v-model="pack_code" label="Pack Code"></v-text-field>
+</v-col>
+<v-col>
+<v-text-field v-model="pack_description" label="Pack Description"></v-text-field>
 </v-col>
 </v-row>
 
@@ -192,13 +208,11 @@ unit_in_case:'',
 weight:'',
 expiry_date:'',
 IsActive:'',
-
+group_code:'',
+group_description:'',
+pack_code:'',
+pack_description:'',
 msg:"",
-errors:[
-    {password:''},
-    {email:''}
-],
-
 snackbar:false,
 Rules : [
   v => !!v || 'This field is required',
@@ -261,6 +275,10 @@ save(){
 
   let product = new FormData();
   product.append('legacy_code_sku',this.legacy_code_sku);
+  product.append('group_code',this.group_code);
+  product.append('group_description',this.group_description);
+  product.append('pack_code',this.pack_code);
+  product.append('pack_description',this.pack_description);
   product.append('product_title',this.product_title); 
   product.append('product_price',this.product_price);
   product.append('product_image',this.product_image);

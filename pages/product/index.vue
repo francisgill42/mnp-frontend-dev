@@ -23,7 +23,7 @@ class="elevation-1"
 >
 <template  v-slot:item.product_image="{ item }">
 <br>
-<img  height="50" width="50" :src="item.product_image" alt="Orange Room Digital"/>
+<img  height="50" width="50" :src="item.product_image"/>
 </template>
 <template v-slot:top>
 <v-toolbar flat>
@@ -47,7 +47,7 @@ vertical
 ></v-divider>
 <v-dialog v-model="dialog" max-width="1000px">
 
-<template v-slot:activator="{ on }">
+<template v-slot:activator="{  }">
 <v-btn class="mb-2 primary accent--text" to="/product/create">New Item</v-btn>
 </template>
 <v-card>
@@ -88,6 +88,24 @@ vertical
 <v-text-field :readonly="isReadOnly"  v-else v-model="editedItem.category" label="Product Category"></v-text-field>
 </v-col> -->
 </v-row>
+<v-row>
+<v-col>
+<v-text-field :rules="Rules" :readonly="isReadOnly" v-model="editedItem.group_code" label="Group Code"></v-text-field>
+</v-col>
+<v-col>
+<v-text-field :rules="Rules" :readonly="isReadOnly" v-model="editedItem.group_description" label="Group Description"></v-text-field>
+</v-col>
+</v-row>
+
+<v-row>
+<v-col>
+<v-text-field  :rules="Rules" :readonly="isReadOnly" v-model="editedItem.pack_code" label="Pack Code"></v-text-field>
+</v-col>
+<v-col>
+<v-text-field :rules="Rules" :readonly="isReadOnly" v-model="editedItem.pack_description" label="Pack Description"></v-text-field>
+</v-col>
+</v-row>
+
 <v-row>
 
 
@@ -223,6 +241,10 @@ value: 'product_price',
 ],
 editedIndex: -1,
 editedItem: {
+group_code:'',
+group_description:'',
+pack_code:'',
+pack_description:'',
 legacy_code_sku: '',
 product_title: '',
 product_price: '',
@@ -238,8 +260,13 @@ unit_in_case:'',
 weight:'',
 expiry_date:'',
 IsActive:'',
+
 },
 defaultItem: {
+group_code:'',
+group_description:'',
+pack_code:'',
+pack_description:'',  
 legacy_code_sku: '',
 product_title: '',
 product_price: '',
@@ -353,6 +380,10 @@ save () {
   let product = new FormData();
   
   product.append('legacy_code_sku',this.editedItem.legacy_code_sku);
+  product.append('group_code',this.editedItem.group_code);
+  product.append('group_description',this.editedItem.group_description);
+  product.append('pack_code',this.editedItem.pack_code);
+  product.append('pack_description',this.editedItem.pack_description);
   product.append('product_title',this.editedItem.product_title);
   product.append('product_price',this.editedItem.product_price);
   product.append('product_image',this.editedItem.upload_image || this.editedItem.product_image);
