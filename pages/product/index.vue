@@ -23,7 +23,7 @@ class="elevation-1"
 >
 <template  v-slot:item.product_image="{ item }">
 <br>
-<img  height="50" width="50" :src="item.product_image"/>
+<img width="50" :src="item.product_image"/>
 </template>
 <template v-slot:top>
 <v-toolbar flat>
