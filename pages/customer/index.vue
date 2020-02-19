@@ -114,9 +114,9 @@ v-model="editedItem.state_id"
 @change="get_cities_by_id"
 item-value="id"
 item-text="state_name" 
-label="State"
+label="Emirate"
 ></v-select>
-<v-text-field v-else :readonly="isReadOnly"  v-model="editedItem.state_name" label="State"></v-text-field>
+<v-text-field v-else :readonly="isReadOnly"  v-model="editedItem.state_name" label="Emirate"></v-text-field>
 
 </v-col>
 <v-col>

@@ -83,7 +83,7 @@ v-model="state_id"
 @change="get_cities_by_id"
 item-value="id"
 item-text="state_name" 
-label="State"
+label="Emirate"
 ></v-select>
 </v-col>
 <v-col>
