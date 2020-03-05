@@ -184,16 +184,8 @@ class="mr-2"
 >
 mdi-pencil
 </v-icon>
-
-<v-icon
-small
-@click="deleteItem(item)"
->
-mdi-delete
-</v-icon>
 </template>
 <template v-slot:no-data>
-<!-- <v-btn color="primary" @click="initialize">Reset</v-btn> -->
 </template>
 </v-data-table>
 </v-app>
@@ -346,22 +338,6 @@ this.editedIndex = this.products.indexOf(item)
 this.editedItem = Object.assign({}, item)
 this.dialog = true
 this.action = 'View Item';
-},
-
-deleteItem (item) {
-confirm('Are you sure you want to delete this item?') && 
-this.$axios.delete('product/'+item.id)
-.then((res) => {
-console.log(item.id);
-if(res.data.response_status){ 
-
-const index = this.products.indexOf(item)
-this.products.splice(index, 1)
-this.snackbar = res.data.response_status;             
-this.response.msg = res.data.message;
-
-}
-});
 },
 
 close () {
