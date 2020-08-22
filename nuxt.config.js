@@ -44,7 +44,7 @@ module.exports = {
   '@nuxtjs/auth'
 ],
 axios: {
-         baseURL: 'https://api.movenpickicecream.ae/api/'
+         baseURL: 'http://localhost:8000/api/'
        //baseURL: 'https://orangeroomdigital.com/mnp_dev/public/api'
 //       baseURL: 'http://localhost/pro/mnp-backend/api/' 
 },
